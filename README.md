@@ -14,9 +14,10 @@ Bolalar uchun labirint topshirig'ini bir zumda yaratadigan bepul sayt. O'qituvch
 
 ### Imkoniyatlari
 
-- Har safar yangi labirint. O'lcham 5×5 dan 30×30 gacha.
-- Labirint raqami: bir xil raqam har doim bir xil labirintni beradi, shuning uchun topshiriqni keyin qayta chiqarib olish mumkin.
-- Labirintning boshiga qahramon, oxiriga manzil stikeri (har biri uchun 12 tadan tanlov).
+- Har safar yangi labirint. O'lcham 5×5 dan 100×100 gacha, tez tanlash uchun 4 ta qiyinlik darajasi bor.
+- Labirint shakli: to'rtburchak, doira, yulduz, yurak, uchburchak, romb, uy, oltiburchak.
+- Labirint raqami: bir xil raqam, o'lcham va shakl har doim bir xil labirintni beradi, shuning uchun topshiriqni keyin qayta chiqarib olish mumkin.
+- Kirishda qahramon, chiqishda manzil stikeri labirintning tashqarisida turadi (har biri uchun 12 tadan tanlov).
 - Varaq tepasiga o'zingiz xohlagan matn, matn o'lchamini sozlash ham mumkin.
 - A4 varaqni PDF qilib yuklab olish (bosma uchun 300 dpi).
 - Javob varag'i: to'g'ri yo'l qizil chiziq bilan ko'rsatilgan alohida PDF.
@@ -45,7 +46,8 @@ Hamma narsa brauzerning o'zida ishlaydi. Serverga hech narsa yuborilmaydi va akk
 ### Qanday ishlaydi
 
 - **Labirint:** Recursive Backtracker (DFS) algoritmi. Har doim bitta to'g'ri yo'l bor, aylanib qoladigan joy yo'q.
-- **Boshi va oxiri:** ikki marta BFS qilib, bir-biridan eng uzoq ikki katak topiladi, shuning uchun yo'l uzun bo'ladi.
+- **Kirish va chiqish:** shaklning bir-biridan eng uzoq ikki chekka joyida devor ochiladi, BFS bilan to'g'ri yo'l topiladi.
+- **Shakllar:** shakl ko'pburchak sifatida beriladi, setkadagi qaysi kataklar shakl ichiga tushishi tekshiriladi va labirint faqat shu kataklarda quriladi.
 - **Raqam (seed):** tasodifiy son generatori (mulberry32) shu raqamdan boshlanadi, shuning uchun natija takrorlanadi.
 - **PDF:** varaq canvas'da chiziladi va bitta A4 sahifali PDF ga o'raladi. Kutubxona kerak emas.
 
@@ -94,9 +96,10 @@ GitHub Pages bir-ikki daqiqada saytni yangilaydi.
 
 ### Возможности
 
-- Каждый раз новый лабиринт. Размер от 5×5 до 30×30.
-- Номер лабиринта: один и тот же номер всегда даёт один и тот же лабиринт, поэтому задание можно позже воспроизвести.
-- Стикер героя в начале и стикер цели в конце (по 12 вариантов для каждого).
+- Каждый раз новый лабиринт. Размер от 5×5 до 100×100, есть 4 уровня сложности для быстрого выбора.
+- Форма лабиринта: прямоугольник, круг, звезда, сердце, треугольник, ромб, домик, шестиугольник.
+- Номер лабиринта: один и тот же номер, размер и форма всегда дают один и тот же лабиринт, поэтому задание можно позже воспроизвести.
+- Стикер героя у входа и стикер цели у выхода стоят снаружи лабиринта (по 12 вариантов для каждого).
 - Любой текст сверху листа, размер текста можно менять.
 - Скачивание листа A4 в PDF (300 dpi для печати).
 - Лист с ответом: отдельный PDF, где правильный путь отмечен красной линией.
@@ -125,7 +128,8 @@ GitHub Pages bir-ikki daqiqada saytni yangilaydi.
 ### Как это работает
 
 - **Лабиринт:** алгоритм Recursive Backtracker (DFS). Всегда есть ровно один правильный путь, без замкнутых кругов.
-- **Старт и финиш:** два прохода BFS находят две самые удалённые клетки, поэтому путь получается длинным.
+- **Вход и выход:** открываются в двух самых удалённых краях формы, правильный путь находится через BFS.
+- **Формы:** форма задаётся многоугольником, проверяется, какие клетки сетки попадают внутрь, и лабиринт строится только на них.
 - **Номер (seed):** генератор случайных чисел (mulberry32) стартует с этого номера, поэтому результат повторяется.
 - **PDF:** лист рисуется на canvas и упаковывается в одностраничный PDF формата A4. Библиотеки не нужны.
 

@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Labirint">
-<!-- Ulashish ko'rinishi (Telegram, Instagram, WhatsApp...). umarxon7887 o'rniga GitHub nomingizni yozing -->
+<!-- Ulashish ko'rinishi (Telegram, Instagram, WhatsApp...) -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Labirint topshiriqlari / Лабиринты для детей">
 <meta property="og:description" content="Bolalar uchun bir zumda yangi labirint yarating va PDF qilib yuklab oling. / Создайте лабиринт и скачайте PDF.">
@@ -50,6 +50,16 @@
   .stk { padding:0; height:48px; font-size:26px; line-height:1; border-radius:12px; border:2px solid var(--line); background:#fff; }
   .stk[aria-pressed=true] { border-color:var(--accent); background:#eaf1ff; }
 
+  .levels { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+  .lvl { padding:9px 2px; font-size:13px; min-width:0; overflow-wrap:anywhere; }
+  .shapes { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+  .shp { display:grid; justify-items:center; gap:4px; padding:8px 2px; font-size:11.5px; font-weight:600;
+         border:2px solid var(--line); color:var(--ink); background:#fff; min-width:0; overflow-wrap:anywhere; line-height:1.15; }
+  .shp svg { width:30px; height:30px; }
+  .shp[aria-pressed=true] { border-color:var(--accent); background:#eaf1ff; }
+  .hint { margin:-4px 0 0; font-size:13px; color:#5b6784; }
+  .hint.warn { color:#b45309; }
+
   .lang { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
   .lang button { padding:8px; font-size:14px; }
   .lang button[aria-pressed=true] { background:var(--accent); color:#fff; }
@@ -73,10 +83,13 @@
     <input id="fs" type="range" min="14" max="48" value="28">
   </label>
   <div class="row">
-    <label><span data-i18n="w"></span> <input id="w" type="number" min="5" max="30" value="10"></label>
-    <label><span data-i18n="h"></span> <input id="h" type="number" min="5" max="30" value="14"></label>
+    <label><span data-i18n="w"></span> <input id="w" type="number" min="5" max="100" value="10"></label>
+    <label><span data-i18n="h"></span> <input id="h" type="number" min="5" max="100" value="14"></label>
     <label><span data-i18n="seedLabel"></span> <input id="seed" type="number" min="1" value="1"></label>
   </div>
+  <div class="picker"><span class="lbl" data-i18n="levelLbl"></span><div class="levels" id="levels"></div></div>
+  <p class="hint" id="cellHint"></p>
+  <div class="picker"><span class="lbl" data-i18n="shapeLbl"></span><div class="shapes" id="shapePick"></div></div>
   <div class="picker"><span class="lbl" data-i18n="heroPick"></span><div class="stickers" id="heroPick"></div></div>
   <div class="picker"><span class="lbl" data-i18n="goalPick"></span><div class="stickers" id="goalPick"></div></div>
   <label class="check"><input id="sol" type="checkbox"> <span data-i18n="sol"></span></label>
@@ -95,7 +108,8 @@ const $ = id => document.getElementById(id);
 const DIRS = [[0,-1],[1,0],[0,1],[-1,0]]; // shimol, sharq, janub, g'arb
 const HEROES = ['🦸','🧒','👧','🐱','🐶','🐰','🦊','🐻','🐼','🐸','🤖','🚀'];
 const GOALS  = ['🏁','🏠','🏰','🍎','🍯','🥕','🎁','⭐','🌳','🦴','🧀','🍦'];
-let heroSt = HEROES[0], goalSt = GOALS[0];
+let heroSt = HEROES[0], goalSt = GOALS[0], shapeKey = 'rect';
+const LEVELS = [[10,14],[20,28],[35,49],[60,85]];
 
 // ---------- Tillar ----------
 const I18N = {
@@ -104,11 +118,16 @@ const I18N = {
     titleLabel: "Topshiriq matni (yuqorida chiqadi)", fsLabel: "Matn o'lchami:",
     w: "Eni", h: "Bo'yi", seedLabel: "Raqami",
     heroPick: "Qahramonni tanlang", goalPick: "Manzilni tanlang",
+    levelLbl: "Qiyinlik (tez tanlash)", levels: ["Oson","O'rta","Qiyin","Juda qiyin"],
+    shapeLbl: "Labirint shakli",
+    shapes: {rect:"To'rtburchak", circle:"Doira", star:"Yulduz", heart:"Yurak", triangle:"Uchburchak", diamond:"Romb", house:"Uy", hexagon:"Oltiburchak"},
+    hintCell: mm => `Katak o'lchami: ${mm} mm`,
+    hintSmall: " · juda mayda, bosmada qiyin ko'rinishi mumkin",
     sol: "Ekranda to'g'ri yo'lni ko'rsatish",
     newBtn: "Yangi labirint", pdfBtn: "Topshiriqni yuklab olish (PDF)", ansBtn: "Javob varag'ini yuklab olish (PDF)",
     note: "Ko'rib turganingiz PDF'da ham aynan shunday chiqadi.",
     defTitle: "Qahramonga uyiga yo'l topishga yordam ber!",
-    foot: (n, W, H) => `Labirint raqami: ${n} (${W}×${H})`,
+    foot: (n, W, H, sh) => `Labirint raqami: ${n} (${W}×${H}${sh ? ', ' + sh : ''})`,
     file: n => `${n} raqamli labirint.pdf`,
     fileAns: n => `${n} raqamli labirint javobi.pdf`
   },
@@ -117,11 +136,16 @@ const I18N = {
     titleLabel: "Текст задания (сверху на листе)", fsLabel: "Размер текста:",
     w: "Ширина", h: "Высота", seedLabel: "Номер",
     heroPick: "Выберите героя", goalPick: "Выберите цель",
+    levelLbl: "Сложность (быстрый выбор)", levels: ["Легко","Средне","Сложно","Очень сложно"],
+    shapeLbl: "Форма лабиринта",
+    shapes: {rect:"Прямоугольник", circle:"Круг", star:"Звезда", heart:"Сердце", triangle:"Треугольник", diamond:"Ромб", house:"Домик", hexagon:"Шестиугольник"},
+    hintCell: mm => `Размер клетки: ${mm} мм`,
+    hintSmall: " · очень мелко, при печати может быть трудно разглядеть",
     sol: "Показать на экране правильный путь",
     newBtn: "Новый лабиринт", pdfBtn: "Скачать задание (PDF)", ansBtn: "Скачать лист с ответом (PDF)",
     note: "Именно так это будет выглядеть в PDF.",
     defTitle: "Помоги герою найти дорогу домой!",
-    foot: (n, W, H) => `Лабиринт № ${n} (${W}×${H})`,
+    foot: (n, W, H, sh) => `Лабиринт № ${n} (${W}×${H}${sh ? ', ' + sh : ''})`,
     file: n => `Лабиринт № ${n}.pdf`,
     fileAns: n => `Лабиринт № ${n} - ответ.pdf`
   }
@@ -139,6 +163,7 @@ function applyLang(l, initial) {
   if (defaults.includes(cur) || (initial && !cur)) $('title').value = T().defTitle;
   document.querySelectorAll('.lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === l)));
   document.title = T().pageTitle;
+  buildLevels(); buildShapes();
   try { localStorage.setItem('lang', l); } catch (e) {}
   render();
 }
@@ -153,22 +178,89 @@ function makeRng(a) {               // seed bilan ishlaydigan tasodifiy son gene
   };
 }
 
-function build(W, H, seed) {
+// Shakllar: [-1, 1] oralig'idagi ko'pburchaklar (v pastga qarab o'sadi)
+function regular(n, rot) {
+  return Array.from({length:n}, (_, i) => { const t = rot + i*2*Math.PI/n; return [Math.cos(t), Math.sin(t)]; });
+}
+function starPts() {
+  const p = [];
+  for (let i = 0; i < 10; i++) { const r = i % 2 ? 0.42 : 1, t = -Math.PI/2 + i*Math.PI/5; p.push([r*Math.cos(t), r*Math.sin(t)]); }
+  return p;
+}
+function heartPts() {
+  const p = [];
+  for (let i = 0; i < 72; i++) {
+    const t = i*2*Math.PI/72;
+    p.push([16*Math.pow(Math.sin(t),3), -(13*Math.cos(t) - 5*Math.cos(2*t) - 2*Math.cos(3*t) - Math.cos(4*t))]);
+  }
+  const xs = p.map(q => q[0]), ys = p.map(q => q[1]);
+  const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
+  const sc = 2 / Math.max(maxX - minX, maxY - minY), cx = (minX+maxX)/2, cy = (minY+maxY)/2;
+  return p.map(([x, y]) => [(x-cx)*sc, (y-cy)*sc]);
+}
+const SHAPES = {
+  rect: null,
+  circle: regular(48, 0),
+  star: starPts(),
+  heart: heartPts(),
+  triangle: [[0,-1],[1,0.75],[-1,0.75]],
+  diamond: [[0,-1],[1,0],[0,1],[-1,0]],
+  house: [[0,-1],[1,-0.15],[0.72,-0.15],[0.72,0.9],[-0.72,0.9],[-0.72,-0.15],[-1,-0.15]],
+  hexagon: regular(6, Math.PI/6)
+};
+
+function inPoly(x, y, poly) {
+  let c = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const [xi, yi] = poly[i], [xj, yj] = poly[j];
+    if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) c = !c;
+  }
+  return c;
+}
+
+// Qaysi kataklar shakl ichida ekanini aniqlaydi (eng katta bog'langan qism qoldiriladi)
+function makeMask(W, H, shape) {
+  const all = Array.from({length:H}, () => Array(W).fill(true));
+  const poly = SHAPES[shape];
+  if (!poly) return all;
+  const m = Math.min(W, H) / 2;
+  const inn = Array.from({length:H}, (_, y) => Array.from({length:W}, (_, x) => inPoly((x + 0.5 - W/2)/m, (y + 0.5 - H/2)/m, poly)));
+  const comp = Array.from({length:H}, () => Array(W).fill(-1));
+  let best = -1, bestSize = 0, id = 0;
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    if (!inn[y][x] || comp[y][x] >= 0) continue;
+    let size = 0; const q = [[x, y]]; comp[y][x] = id;
+    for (let i = 0; i < q.length; i++) {
+      const [cx, cy] = q[i]; size++;
+      DIRS.forEach(([dx, dy]) => {
+        const nx = cx+dx, ny = cy+dy;
+        if (nx>=0 && ny>=0 && nx<W && ny<H && inn[ny][nx] && comp[ny][nx] < 0) { comp[ny][nx] = id; q.push([nx, ny]); }
+      });
+    }
+    if (size > bestSize) { bestSize = size; best = id; }
+    id++;
+  }
+  if (bestSize < 12) return all;                  // shakl juda kichik bo'lsa, oddiy to'rtburchak
+  return comp.map(row => row.map(c => c === best));
+}
+
+function build(W, H, seed, shape) {
   const rand = makeRng(seed);
+  const inn = makeMask(W, H, shape);
+  const isIn = (x, y) => x >= 0 && y >= 0 && x < W && y < H && inn[y][x];
+  const cells = [];
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (inn[y][x]) cells.push([x, y]);
   const open = Array.from({length:H}, () => Array.from({length:W}, () => [false,false,false,false]));
   const seen = Array.from({length:H}, () => Array(W).fill(false));
 
-  // Recursive Backtracker (DFS, stek bilan)
-  const sx = Math.floor(rand()*W), sy = Math.floor(rand()*H);
-  const stack = [[sx, sy]];
-  seen[sy][sx] = true;
+  // Recursive Backtracker (DFS, stek bilan), faqat shakl ichidagi kataklarda
+  const s0 = cells[Math.floor(rand()*cells.length)];
+  const stack = [s0];
+  seen[s0[1]][s0[0]] = true;
   while (stack.length) {
     const [x, y] = stack[stack.length-1];
     const nb = [];
-    DIRS.forEach(([dx,dy], d) => {
-      const nx = x+dx, ny = y+dy;
-      if (nx>=0 && ny>=0 && nx<W && ny<H && !seen[ny][nx]) nb.push(d);
-    });
+    DIRS.forEach(([dx,dy], d) => { if (isIn(x+dx, y+dy) && !seen[y+dy][x+dx]) nb.push(d); });
     if (!nb.length) { stack.pop(); continue; }
     const d = nb[Math.floor(rand()*nb.length)];
     const nx = x+DIRS[d][0], ny = y+DIRS[d][1];
@@ -178,7 +270,7 @@ function build(W, H, seed) {
     stack.push([nx, ny]);
   }
 
-  // BFS: berilgan katakdan eng uzoq katak va yo'l
+  // BFS: berilgan katakdan tartib bilan hamma kataklar va yo'l
   function bfs(fx, fy) {
     const dist = Array.from({length:H}, () => Array(W).fill(-1));
     const prev = {};
@@ -189,33 +281,53 @@ function build(W, H, seed) {
       DIRS.forEach(([dx,dy], d) => {
         if (!open[y][x][d]) return;
         const nx = x+dx, ny = y+dy;
-        if (dist[ny][nx] < 0) {
-          dist[ny][nx] = dist[y][x]+1;
-          prev[nx+','+ny] = [x, y];
-          q.push([nx, ny]);
-        }
+        if (dist[ny][nx] < 0) { dist[ny][nx] = dist[y][x]+1; prev[nx+','+ny] = [x, y]; q.push([nx, ny]); }
       });
     }
-    return { last:q[q.length-1], prev };
+    return { q, prev };
   }
 
-  // Boshi va oxiri: eng uzun yo'l bo'ladigan ikki chekka katak
-  const a = bfs(Math.floor(rand()*W), Math.floor(rand()*H)).last;
+  // Kirish va chiqish labirintning chetida, shaklning eng uzoq uchlarida bo'ladi
+  const isEdge = (x, y) => DIRS.some(([dx,dy]) => !isIn(x+dx, y+dy));
+  const mx = cells.reduce((t, c) => t + c[0], 0) / cells.length;
+  const my = cells.reduce((t, c) => t + c[1], 0) / cells.length;
+  const dc = c => Math.hypot(c[0]-mx, c[1]-my);
+  const edge = cells.filter(c => isEdge(c[0], c[1]));
+  const maxD = Math.max(...edge.map(dc));
+  const far = edge.filter(c => dc(c) >= 0.8*maxD);
+  const a = far[Math.floor(rand()*far.length)];
+  let e = null, bestD = -1;
+  far.forEach(c => { const d = Math.hypot(c[0]-a[0], c[1]-a[1]); if (c !== a && d > bestD) { bestD = d; e = c; } });
+  if (!e) e = edge.find(c => c !== a) || cells.find(c => c !== a);
   const b = bfs(a[0], a[1]);
-  const start = a, end = b.last;
+  // Chiqish yo'nalishi: markazdan eng uzoqqa qaragan ochiq tomon
+  const outDir = c => {
+    let best = 0, bs = -Infinity;
+    for (let d = 0; d < 4; d++) {
+      if (isIn(c[0]+DIRS[d][0], c[1]+DIRS[d][1])) continue;
+      const sc = DIRS[d][0]*(c[0]-mx) + DIRS[d][1]*(c[1]-my);
+      if (sc > bs) { bs = sc; best = d; }
+    }
+    return best;
+  };
+
   const path = [];
-  for (let c = end; c; c = b.prev[c[0]+','+c[1]]) path.push(c);
+  for (let c = e; c; c = b.prev[c[0]+','+c[1]]) path.push(c);
   path.reverse();                    // boshidan oxirigacha
-  return { open, start, end, path };
+
+  let minX = W, maxX = 0, minY = H, maxY = 0;
+  cells.forEach(([x, y]) => { minX = Math.min(minX, x); maxX = Math.max(maxX, x); minY = Math.min(minY, y); maxY = Math.max(maxY, y); });
+  return { isIn, open, start:a, end:e, sDir:outDir(a), eDir:outDir(e), path, bbox:{minX, maxX, minY, maxY}, count:cells.length };
 }
 
 // ---------- Varaqni chizish (A4 = 210 x 297 mm, k = piksel/mm) ----------
 function state() {
   const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v || lo));
   return {
-    W: clamp(Math.round(+$('w').value), 5, 30),
-    H: clamp(Math.round(+$('h').value), 5, 30),
+    W: clamp(Math.round(+$('w').value), 5, 100),
+    H: clamp(Math.round(+$('h').value), 5, 100),
     seed: Math.max(1, Math.round(+$('seed').value) || 1),
+    shape: shapeKey,
     title: $('title').value,
     fontPt: +$('fs').value || 28
   };
@@ -238,7 +350,7 @@ function wrapLines(ctx, text, maxW) {
 }
 
 function drawMarker(ctx, emoji, cx, cy, size, k) {
-  ctx.font = `${size*0.8*k}px "Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif`;
+  ctx.font = `${size*0.85*k}px "Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif`;
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   ctx.fillStyle = '#1f2a44';
   ctx.fillText(emoji, cx*k, cy*k);
@@ -246,7 +358,7 @@ function drawMarker(ctx, emoji, cx, cy, size, k) {
 
 function drawSheet(canvas, k, showSolution) {
   const s = state();
-  const m = build(s.W, s.H, s.seed);
+  const m = build(s.W, s.H, s.seed, s.shape);
   const ctx = canvas.getContext('2d');
   canvas.width = Math.round(210*k);
   canvas.height = Math.round(297*k);
@@ -270,51 +382,66 @@ function drawSheet(canvas, k, showSolution) {
   const footH = 7;
   ctx.font = `${8*0.3528*k}px "Trebuchet MS","DejaVu Sans",Arial,sans-serif`;
   ctx.fillStyle = '#7b869c'; ctx.textAlign = 'right'; ctx.textBaseline = 'alphabetic';
-  ctx.fillText(T().foot(s.seed, s.W, s.H), (210-M)*k, (297-M)*k);
+  ctx.fillText(T().foot(s.seed, s.W, s.H, s.shape === 'rect' ? '' : T().shapes[s.shape]), (210-M)*k, (297-M)*k);
 
-  // Labirint joylashadigan maydon
+  // Labirint va stikerlar uchun maydon
   const top = titleBottom + (lines.length ? 8 : 0);
   const areaH = (297 - M - footH) - top;
-  const cell = Math.min(areaW / s.W, areaH / s.H);
-  const ox = 105 - (cell*s.W)/2;
-  const oy = top + (areaH - cell*s.H)/2;
+  const bb = m.bbox, gw = bb.maxX - bb.minX + 1, gh = bb.maxY - bb.minY + 1;
+  const cell0 = Math.min(areaW / gw, areaH / gh);
+  const S = Math.min(14, Math.max(9, cell0 * 0.95));   // stiker o'lchami, mm
+  const pad = [0, 0, 0, 0];                            // shimol, sharq, janub, g'arb
+  pad[m.sDir] = S + 1; pad[m.eDir] = Math.max(pad[m.eDir], S + 1);
+  const cell = Math.min((areaW - pad[1] - pad[3]) / gw, (areaH - pad[0] - pad[2]) / gh);
+  const contentW = gw*cell + pad[1] + pad[3], contentH = gh*cell + pad[0] + pad[2];
+  const ox = 105 - contentW/2 + pad[3] - bb.minX*cell;
+  const oy = top + (areaH - contentH)/2 + pad[0] - bb.minY*cell;
 
-  // Devorlar
+  // Devorlar (kirish va chiqishda devor ochiq)
+  const gate = (x, y, d) => (x === m.start[0] && y === m.start[1] && d === m.sDir) || (x === m.end[0] && y === m.end[1] && d === m.eDir);
   ctx.strokeStyle = '#1f2a44';
-  ctx.lineWidth = Math.min(0.9, Math.max(0.35, cell*0.09)) * k;
+  ctx.lineWidth = Math.min(0.9, Math.max(0.3, cell*0.09)) * k;
   ctx.lineCap = 'round'; ctx.lineJoin = 'round';
   ctx.beginPath();
-  for (let y = 0; y < s.H; y++) {
-    for (let x = 0; x < s.W; x++) {
+  for (let y = bb.minY; y <= bb.maxY; y++) {
+    for (let x = bb.minX; x <= bb.maxX; x++) {
+      if (!m.isIn(x, y)) continue;
       const x0 = (ox + x*cell)*k, y0 = (oy + y*cell)*k, x1 = x0 + cell*k, y1 = y0 + cell*k;
-      if (!m.open[y][x][0]) { ctx.moveTo(x0, y0); ctx.lineTo(x1, y0); }
-      if (!m.open[y][x][3]) { ctx.moveTo(x0, y0); ctx.lineTo(x0, y1); }
-      if (y === s.H-1)      { ctx.moveTo(x0, y1); ctx.lineTo(x1, y1); }
-      if (x === s.W-1)      { ctx.moveTo(x1, y0); ctx.lineTo(x1, y1); }
+      if ((!m.isIn(x, y-1) || !m.open[y][x][0]) && !gate(x, y, 0)) { ctx.moveTo(x0, y0); ctx.lineTo(x1, y0); }
+      if ((!m.isIn(x-1, y) || !m.open[y][x][3]) && !gate(x, y, 3)) { ctx.moveTo(x0, y0); ctx.lineTo(x0, y1); }
+      if (!m.isIn(x, y+1) && !gate(x, y, 2)) { ctx.moveTo(x0, y1); ctx.lineTo(x1, y1); }
+      if (!m.isIn(x+1, y) && !gate(x, y, 1)) { ctx.moveTo(x1, y0); ctx.lineTo(x1, y1); }
     }
   }
   ctx.stroke();
 
+  // Stikerlar labirintdan tashqarida, kirish va chiqish oldida
+  const ctr = ([x, y]) => [ox + (x+.5)*cell, oy + (y+.5)*cell];
+  const outside = (c, d) => { const [cx, cy] = ctr(c), off = cell/2 + S/2 + 0.5; return [cx + DIRS[d][0]*off, cy + DIRS[d][1]*off]; };
+  const sp = outside(m.start, m.sDir), ep = outside(m.end, m.eDir);
+
   // To'g'ri yo'l (javob varag'i)
   if (showSolution) {
     ctx.strokeStyle = 'rgba(229,72,77,.85)';
-    ctx.lineWidth = cell * 0.22 * k;
+    ctx.lineWidth = Math.min(2, Math.max(0.5, cell * 0.22)) * k;
     ctx.beginPath();
-    m.path.forEach(([x, y], i) => {
-      const px = (ox + (x+.5)*cell)*k, py = (oy + (y+.5)*cell)*k;
-      i ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
+    [sp, ...m.path.map(ctr), ep].forEach(([px, py], i) => {
+      i ? ctx.lineTo(px*k, py*k) : ctx.moveTo(px*k, py*k);
     });
     ctx.stroke();
   }
 
-  // Qahramon va manzil
-  drawMarker(ctx, heroSt, ox + (m.start[0]+.5)*cell, oy + (m.start[1]+.5)*cell, cell, k);
-  drawMarker(ctx, goalSt, ox + (m.end[0]+.5)*cell,   oy + (m.end[1]+.5)*cell,   cell, k);
+  drawMarker(ctx, heroSt, sp[0], sp[1], S, k);
+  drawMarker(ctx, goalSt, ep[0], ep[1], S, k);
+  return { cell, S };
 }
 
 function render() {
   $('fsVal').textContent = $('fs').value;
-  drawSheet($('sheet'), 1240/210, $('sol').checked);   // ekran uchun (~150 dpi)
+  const info = drawSheet($('sheet'), 1240/210, $('sol').checked);   // ekran uchun (~150 dpi)
+  const h = $('cellHint');
+  h.textContent = T().hintCell(info.cell.toFixed(1)) + (info.cell < 3 ? T().hintSmall : '');
+  h.classList.toggle('warn', info.cell < 3);
 }
 
 // ---------- PDF (bitta A4 sahifa, JPEG rasm) ----------
@@ -363,6 +490,40 @@ function savePdf(withSolution) {
 }
 
 // ---------- Boshqaruv ----------
+function buildLevels() {
+  const box = $('levels');
+  box.innerHTML = '';
+  LEVELS.forEach(([w, h], i) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'lvl'; b.textContent = T().levels[i];
+    b.title = `${w}×${h}`;
+    b.addEventListener('click', () => { $('w').value = w; $('h').value = h; render(); });
+    box.appendChild(b);
+  });
+}
+function shapeIcon(key) {
+  const pts = SHAPES[key] || [[-0.75,-0.95],[0.75,-0.95],[0.75,0.95],[-0.75,0.95]];
+  const p = pts.map(([x, y]) => `${(15 + x*13).toFixed(1)},${(15 + y*13).toFixed(1)}`).join(' ');
+  return `<svg viewBox="0 0 30 30" aria-hidden="true"><polygon points="${p}" fill="#2F6FED" opacity=".9"/></svg>`;
+}
+function buildShapes() {
+  const box = $('shapePick');
+  box.innerHTML = '';
+  Object.keys(SHAPES).forEach(key => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'shp'; b.dataset.shape = key;
+    b.innerHTML = shapeIcon(key) + '<span></span>';
+    b.lastChild.textContent = T().shapes[key];
+    b.setAttribute('aria-pressed', String(shapeKey === key));
+    b.addEventListener('click', () => {
+      shapeKey = key;
+      box.querySelectorAll('.shp').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.shape === key)));
+      try { localStorage.setItem('shape', key); } catch (e) {}
+      render();
+    });
+    box.appendChild(b);
+  });
+}
 function buildPicker(boxId, list, get, set, storeKey) {
   const box = $(boxId);
   box.innerHTML = '';
@@ -383,6 +544,8 @@ try {
   const h = localStorage.getItem('hero'), g = localStorage.getItem('goal');
   if (HEROES.includes(h)) heroSt = h;
   if (GOALS.includes(g)) goalSt = g;
+  const sh = localStorage.getItem('shape');
+  if (sh in SHAPES) shapeKey = sh;
 } catch (e) {}
 buildPicker('heroPick', HEROES, () => heroSt, v => heroSt = v, 'hero');
 buildPicker('goalPick', GOALS,  () => goalSt, v => goalSt = v, 'goal');
