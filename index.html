@@ -60,6 +60,10 @@
   .hint { margin:-4px 0 0; font-size:13px; color:#5b6784; }
   .hint.warn { color:#b45309; }
 
+  .tabs { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .tabs a { text-align:center; padding:10px; border-radius:10px; border:2px solid var(--accent); color:var(--accent);
+            font-weight:700; text-decoration:none; background:#fff; }
+  .tabs a[aria-current=page] { background:var(--accent); color:#fff; }
   .lang { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
   .lang button { padding:8px; font-size:14px; }
   .lang button[aria-pressed=true] { background:var(--accent); color:#fff; }
@@ -72,6 +76,10 @@
 <body>
 
 <div class="controls">
+  <nav class="tabs" aria-label="Bo'limlar / Разделы">
+    <a href="index.html" aria-current="page" data-i18n="tabMaze"></a>
+    <a href="sudoku.html" data-i18n="tabSudoku"></a>
+  </nav>
   <div class="lang" role="group" aria-label="Til / Язык">
     <button type="button" data-lang="uz" aria-pressed="true">O'zbekcha</button>
     <button type="button" data-lang="ru" aria-pressed="false">Русский</button>
@@ -114,7 +122,7 @@ const LEVELS = [[10,14],[20,28],[35,49],[60,85]];
 // ---------- Tillar ----------
 const I18N = {
   uz: {
-    pageTitle: "Labirint topshirig'i",
+    pageTitle: "Labirint topshirig'i", tabMaze: "Labirint", tabSudoku: "Sudoku",
     titleLabel: "Topshiriq matni (yuqorida chiqadi)", fsLabel: "Matn o'lchami:",
     w: "Eni", h: "Bo'yi", seedLabel: "Raqami",
     heroPick: "Qahramonni tanlang", goalPick: "Manzilni tanlang",
@@ -132,7 +140,7 @@ const I18N = {
     fileAns: n => `${n} raqamli labirint javobi.pdf`
   },
   ru: {
-    pageTitle: "Задание-лабиринт",
+    pageTitle: "Задание-лабиринт", tabMaze: "Лабиринт", tabSudoku: "Судоку",
     titleLabel: "Текст задания (сверху на листе)", fsLabel: "Размер текста:",
     w: "Ширина", h: "Высота", seedLabel: "Номер",
     heroPick: "Выберите героя", goalPick: "Выберите цель",
