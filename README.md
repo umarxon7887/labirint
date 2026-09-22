@@ -39,6 +39,24 @@ Fayl nomlari: `12345 raqamli labirint.pdf` va `12345 raqamli labirint javobi.pdf
 
 Chrome'da saytni oching, menyudan **Bosh ekranga qo'shish** ni tanlang. Ilova o'z ikonkasi bilan ochiladi va internetsiz ham ishlaydi.
 
+### Sudoku
+
+Saytda **Sudoku** bo'limi ham bor (yuqoridagi "Sudoku" tugmasi): https://umarxon7887.github.io/labirint/sudoku.html
+
+- Turlari: 4×4, 5×5, 6×6, 7×7, 8×8, klassik 9×9 va diagonal (X) 9×9. 5×5 va 7×7 tub son bo'lgani uchun to'g'ri burchakli blok chiqmaydi, ularda har safar tasodifiy **shaklli bloklar** (jigsaw) chiziladi.
+- 4 ta daraja: Oson, O'rta, Qiyin, Juda qiyin. Har bir sudokuning yechimi **faqat bitta**. Oson va O'rta darajalar taxmin qilmasdan, faqat mantiq bilan yechiladi.
+- Topshiriq PDF va javob varag'i PDF (javoblar qizil rangda), o'zbek va rus tillari.
+- Bir xil raqam, tur va daraja har doim bir xil sudokuni beradi.
+
+### So'z qidiruv
+
+Uchinchi bo'lim — **So'z qidiruv** (klassik "Найди слова" / filvord turi): https://umarxon7887.github.io/labirint/wordsearch.html
+
+- Mavzular: Maktab, Kuz, Hayvonlar, Ovqatlar, Sport, Fazo — yoki **"O'zim yozaman"** bilan xohlagan so'zlaringizni kiritish.
+- 4 ta daraja: nechta yo'nalishda (o'ngga/pastga, keyin diagonal, keyin orqaga ham) so'zlar yashirilishini belgilaydi. Qiyinroq darajada jadval ham zichroq bo'ladi.
+- Topshiriq PDF (so'zlar ro'yxati bilan) va javob varag'i PDF (har bir so'z rangli fonda ko'rsatiladi).
+- O'zbekcha so'zlarda `o'` va `g'` to'g'ri tanib olinadi.
+
 ### Maxfiylik
 
 Hamma narsa brauzerning o'zida ishlaydi. Serverga hech narsa yuborilmaydi va akkaunt kerak emas. Faqat tanlangan til va stikerlar shu qurilmada eslab qolinadi.
@@ -55,7 +73,7 @@ Hamma narsa brauzerning o'zida ishlaydi. Serverga hech narsa yuborilmaydi va akk
 
 | Fayl | Vazifasi |
 |---|---|
-| `index.html` | Butun ilova (sahifa, algoritm, PDF) |
+| `index.html`, `sudoku.html`, `wordsearch.html` | Labirint, sudoku va so'z qidiruv sahifalari (sahifa, algoritm, PDF) |
 | `manifest.json`, `sw.js` | Telefonga o'rnatish va oflayn ishlash |
 | `icon-*.png`, `apple-touch-icon.png` | Ilova ikonkalari |
 | `og.png` | Havola ulashilganda chiqadigan rasm |
@@ -121,6 +139,23 @@ GitHub Pages bir-ikki daqiqada saytni yangilaydi.
 
 Откройте сайт в Chrome и выберите в меню **Добавить на главный экран**. Приложение откроется со своей иконкой и будет работать без интернета.
 
+### Судоку
+
+На сайте есть и раздел **Судоку** (кнопка «Судоку» сверху): https://umarxon7887.github.io/labirint/sudoku.html
+
+- Типы: 4×4, 5×5, 6×6, 7×7, 8×8, классическое 9×9 и диагональное (X) 9×9. Числа 5 и 7 простые, поэтому прямоугольных блоков не получается: в них каждый раз рисуются случайные **фигурные блоки** (jigsaw).
+- 4 уровня: Легко, Средне, Сложно, Очень сложно. У каждого судоку **только одно** решение. Уровни «Легко» и «Средне» решаются логикой, без угадывания.
+- PDF с заданием и PDF с ответом (ответы красным), узбекский и русский языки.
+- Один и тот же номер, тип и уровень всегда дают одно и то же судоку.
+
+### Найди слова
+
+Третий раздел — классическое **«Найди слова»**: https://umarxon7887.github.io/labirint/wordsearch.html
+
+- Темы: Школа, Осень, Животные, Еда, Спорт, Космос — или **«Свои слова»** для собственного списка.
+- 4 уровня сложности: определяют, в скольких направлениях прячутся слова (вправо/вниз, затем по диагонали, затем и в обратную сторону), а также плотность таблицы.
+- PDF с заданием (со списком слов) и PDF с ответом (каждое слово подсвечено своим цветом).
+
 ### Конфиденциальность
 
 Всё работает прямо в браузере. Ничего не отправляется на сервер, аккаунт не нужен. На устройстве запоминаются только выбранный язык и стикеры.
@@ -137,7 +172,7 @@ GitHub Pages bir-ikki daqiqada saytni yangilaydi.
 
 | Файл | Назначение |
 |---|---|
-| `index.html` | Всё приложение (страница, алгоритм, PDF) |
+| `index.html`, `sudoku.html`, `wordsearch.html` | Страницы лабиринта, судоку и «Найди слова» (страница, алгоритм, PDF) |
 | `manifest.json`, `sw.js` | Установка на телефон и работа офлайн |
 | `icon-*.png`, `apple-touch-icon.png` | Иконки приложения |
 | `og.png` | Картинка при отправке ссылки |

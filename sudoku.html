@@ -55,9 +55,9 @@
   .lvl[aria-pressed=true] { background:var(--accent); color:#fff; }
   .hint { margin:-4px 0 0; font-size:13px; color:#5b6784; }
 
-  .tabs { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-  .tabs a { text-align:center; padding:10px; border-radius:10px; border:2px solid var(--accent); color:var(--accent);
-            font-weight:700; text-decoration:none; background:#fff; }
+  .tabs { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+  .tabs a { text-align:center; padding:10px 4px; border-radius:10px; border:2px solid var(--accent); color:var(--accent);
+            font-weight:700; text-decoration:none; background:#fff; font-size:14px; }
   .tabs a[aria-current=page] { background:var(--accent); color:#fff; }
   .lang { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
   .lang button { padding:8px; font-size:14px; }
@@ -74,6 +74,7 @@
   <nav class="tabs" aria-label="Bo'limlar / Разделы">
     <a href="index.html" data-i18n="tabMaze"></a>
     <a href="sudoku.html" aria-current="page" data-i18n="tabSudoku"></a>
+    <a href="wordsearch.html" data-i18n="tabWords"></a>
   </nav>
   <div class="lang" role="group" aria-label="Til / Язык">
     <button type="button" data-lang="uz" aria-pressed="true">O'zbekcha</button>
@@ -123,7 +124,7 @@ let typeKey = '9', levelIdx = 1;
 // ---------- Tillar ----------
 const I18N = {
   uz: {
-    pageTitle: "Sudoku topshirig'i", tabMaze: "Labirint", tabSudoku: "Sudoku",
+    pageTitle: "Sudoku topshirig'i", tabMaze: "Labirint", tabSudoku: "Sudoku", tabWords: "So'z qidiruv",
     typeLbl: "Sudoku turi",
     types: {'4':['4×4','bloklar 2×2'], '5':['5×5','shaklli bloklar'], '6':['6×6','bloklar 2×3'], '7':['7×7','shaklli bloklar'], '8':['8×8','bloklar 2×4'], '9':['9×9','klassik'], '9x':['9×9','diagonal (X)']},
     typeFoot: {'4':'4×4', '5':'5×5 jigsaw', '6':'6×6', '7':'7×7 jigsaw', '8':'8×8', '9':'9×9', '9x':'9×9 X'},
@@ -140,7 +141,7 @@ const I18N = {
     fileAns: n => `${n} raqamli sudoku javobi.pdf`
   },
   ru: {
-    pageTitle: "Задание-судоку", tabMaze: "Лабиринт", tabSudoku: "Судоку",
+    pageTitle: "Задание-судоку", tabMaze: "Лабиринт", tabSudoku: "Судоку", tabWords: "Найди слова",
     typeLbl: "Тип судоку",
     types: {'4':['4×4','блоки 2×2'], '5':['5×5','фигурные блоки'], '6':['6×6','блоки 2×3'], '7':['7×7','фигурные блоки'], '8':['8×8','блоки 2×4'], '9':['9×9','классика'], '9x':['9×9','диагональ (X)']},
     typeFoot: {'4':'4×4', '5':'5×5 jigsaw', '6':'6×6', '7':'7×7 jigsaw', '8':'8×8', '9':'9×9', '9x':'9×9 X'},
