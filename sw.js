@@ -1,6 +1,6 @@
 // Oflayn ishlash uchun oddiy service worker: avval tarmoq, bo'lmasa keshdan.
-const CACHE = 'labirint-v3';
-const ASSETS = ['./', './index.html', './sudoku.html', './wordsearch.html', './manifest.json', './icon-192.png', './icon-512.png'];
+const CACHE = 'labirint-v4';
+const ASSETS = ['./', './index.html', './sudoku.html', './wordsearch.html', './krossvord.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));

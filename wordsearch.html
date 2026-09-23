@@ -56,9 +56,9 @@
   .hint { margin:-4px 0 0; font-size:13px; color:#5b6784; }
   .hint.warn { color:#b45309; }
 
-  .tabs { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
-  .tabs a { text-align:center; padding:10px 4px; border-radius:10px; border:2px solid var(--accent); color:var(--accent);
-            font-weight:700; text-decoration:none; background:#fff; font-size:14px; }
+  .tabs { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:6px; }
+  .tabs a { text-align:center; padding:10px 2px; border-radius:10px; border:2px solid var(--accent); color:var(--accent);
+            font-weight:700; text-decoration:none; background:#fff; font-size:12.5px; }
   .tabs a[aria-current=page] { background:var(--accent); color:#fff; }
   .lang { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
   .lang button { padding:8px; font-size:14px; }
@@ -76,6 +76,7 @@
     <a href="index.html" data-i18n="tabMaze"></a>
     <a href="sudoku.html" data-i18n="tabSudoku"></a>
     <a href="wordsearch.html" aria-current="page" data-i18n="tabWords"></a>
+    <a href="krossvord.html" data-i18n="tabCross"></a>
   </nav>
   <div class="lang" role="group" aria-label="Til / Язык">
     <button type="button" data-lang="uz" aria-pressed="true">O'zbekcha</button>
@@ -140,7 +141,7 @@ const LEVEL_WORDCOUNT = [8, 10, 12, 14];  // har bir daraja uchun tanlanadigan s
 // ---------- Tillar ----------
 const I18N = {
   uz: {
-    pageTitle: "So'z qidiruv topshirig'i", tabMaze: "Labirint", tabSudoku: "Sudoku", tabWords: "So'z qidiruv",
+    pageTitle: "So'z qidiruv topshirig'i", tabMaze: "Labirint", tabSudoku: "Sudoku", tabWords: "So'z qidiruv", tabCross: "Krossvord",
     catLbl: "Mavzu",
     cats: {school:['Maktab',''], autumn:['Kuz',''], animals:['Hayvonlar',''], food:['Ovqatlar',''], sport:['Sport',''], space:['Fazo',''], custom:['O\u02bczim yozaman','']},
     customLbl: "So'zlaringiz (vergul yoki har birini yangi qatorga)",
@@ -158,7 +159,7 @@ const I18N = {
     fileAns: n => `${n} raqamli soz qidiruv javobi.pdf`
   },
   ru: {
-    pageTitle: "Задание «Найди слова»", tabMaze: "Лабиринт", tabSudoku: "Судоку", tabWords: "Найди слова",
+    pageTitle: "Задание «Найди слова»", tabMaze: "Лабиринт", tabSudoku: "Судоку", tabWords: "Найди слова", tabCross: "Кроссворд",
     catLbl: "Тема",
     cats: {school:['Школа',''], autumn:['Осень',''], animals:['Животные',''], food:['Еда',''], sport:['Спорт',''], space:['Космос',''], custom:['Свои слова','']},
     customLbl: "Ваши слова (через запятую или с новой строки)",

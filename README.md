@@ -57,6 +57,15 @@ Uchinchi bo'lim — **So'z qidiruv** (klassik "Найди слова" / filvord 
 - Topshiriq PDF (so'zlar ro'yxati bilan) va javob varag'i PDF (har bir so'z rangli fonda ko'rsatiladi).
 - O'zbekcha so'zlarda `o'` va `g'` to'g'ri tanib olinadi.
 
+### Sonli krossvord
+
+To'rtinchi bo'lim — **Sonli krossvord** (qo'shish, ayirish, ko'paytirish, bo'lish tengliklaridan tuzilgan jumboq): https://umarxon7887.github.io/labirint/krossvord.html
+
+- Har safar tengliklar krossvord shaklida bir-biriga kesishib joylashtiriladi (labirintdagi kabi tasodifiy, seed asosida).
+- 4 daraja: Oson (faqat qo'shish/ayirish), O'rta (+ko'paytirish), Qiyin va Juda qiyin (+bo'lish, kattaroq sonlar, ko'proq tengliklar).
+- Har bir bo'sh katakcha qolgan ikkitasidan mantiq bilan (taxminsiz) topiladi — sudokudagi kabi yagona yechim kafolatlanadi.
+- Topshiriq PDF (bo'sh katakchalar bilan) va javob varag'i PDF (yechim qizil rangda).
+
 ### Maxfiylik
 
 Hamma narsa brauzerning o'zida ishlaydi. Serverga hech narsa yuborilmaydi va akkaunt kerak emas. Faqat tanlangan til va stikerlar shu qurilmada eslab qolinadi.
@@ -73,7 +82,7 @@ Hamma narsa brauzerning o'zida ishlaydi. Serverga hech narsa yuborilmaydi va akk
 
 | Fayl | Vazifasi |
 |---|---|
-| `index.html`, `sudoku.html`, `wordsearch.html` | Labirint, sudoku va so'z qidiruv sahifalari (sahifa, algoritm, PDF) |
+| `index.html`, `sudoku.html`, `wordsearch.html`, `krossvord.html` | Labirint, sudoku, so'z qidiruv va sonli krossvord sahifalari (sahifa, algoritm, PDF) |
 | `manifest.json`, `sw.js` | Telefonga o'rnatish va oflayn ishlash |
 | `icon-*.png`, `apple-touch-icon.png` | Ilova ikonkalari |
 | `og.png` | Havola ulashilganda chiqadigan rasm |
@@ -156,6 +165,15 @@ GitHub Pages bir-ikki daqiqada saytni yangilaydi.
 - 4 уровня сложности: определяют, в скольких направлениях прячутся слова (вправо/вниз, затем по диагонали, затем и в обратную сторону), а также плотность таблицы.
 - PDF с заданием (со списком слов) и PDF с ответом (каждое слово подсвечено своим цветом).
 
+### Числовой кроссворд
+
+Четвёртый раздел — **числовой кроссворд** (головоломка из равенств на сложение, вычитание, умножение и деление): https://umarxon7887.github.io/labirint/krossvord.html
+
+- Каждый раз равенства складываются в кроссворд по-новому (случайно, на основе номера).
+- 4 уровня: Легко (только +/-), Средне (+умножение), Сложно и Очень сложно (+деление, числа крупнее, равенств больше).
+- Каждая пустая клетка выводится логически (без угадывания) из двух других — как в судоку, решение всегда единственное.
+- PDF с заданием (пустые клетки) и PDF с ответом (решение красным).
+
 ### Конфиденциальность
 
 Всё работает прямо в браузере. Ничего не отправляется на сервер, аккаунт не нужен. На устройстве запоминаются только выбранный язык и стикеры.
@@ -172,7 +190,7 @@ GitHub Pages bir-ikki daqiqada saytni yangilaydi.
 
 | Файл | Назначение |
 |---|---|
-| `index.html`, `sudoku.html`, `wordsearch.html` | Страницы лабиринта, судоку и «Найди слова» (страница, алгоритм, PDF) |
+| `index.html`, `sudoku.html`, `wordsearch.html`, `krossvord.html` | Страницы лабиринта, судоку, «Найди слова» и числового кроссворда (страница, алгоритм, PDF) |
 | `manifest.json`, `sw.js` | Установка на телефон и работа офлайн |
 | `icon-*.png`, `apple-touch-icon.png` | Иконки приложения |
 | `og.png` | Картинка при отправке ссылки |
