@@ -66,6 +66,14 @@ To'rtinchi bo'lim — **Sonli krossvord** (qo'shish, ayirish, ko'paytirish, bo'l
 - Har bir bo'sh katakcha qolgan ikkitasidan mantiq bilan (taxminsiz) topiladi — sudokudagi kabi yagona yechim kafolatlanadi.
 - Topshiriq PDF (bo'sh katakchalar bilan) va javob varag'i PDF (yechim qizil rangda).
 
+### Topshiriqlar to'plami
+
+Beshinchi bo'lim — **hammasini bitta PDF qiladigan to'plam yig'uvchi**: https://umarxon7887.github.io/labirint/toplam.html
+
+- Har turdan (labirint, sudoku, so'z qidiruv, krossvord) nechta va qaysi darajada kerakligini tanlaysiz.
+- "To'plamni yaratish" bosilgach, har bir topshiriq kichik ko'rinishda chiqadi — kerak bo'lsa "Yangi" bilan almashtirasiz yoki "O'chirish" bilan olib tashlaysiz.
+- Tayyor bo'lgach, bitta ko'p betli **"Topshiriqlar (PDF)"** yoki **"Javoblar (PDF)"** qilib yuklab olasiz — har bir topshiriq o'z sahifasida.
+
 ### Maxfiylik
 
 Hamma narsa brauzerning o'zida ishlaydi. Serverga hech narsa yuborilmaydi va akkaunt kerak emas. Faqat tanlangan til va stikerlar shu qurilmada eslab qolinadi.
@@ -83,6 +91,7 @@ Hamma narsa brauzerning o'zida ishlaydi. Serverga hech narsa yuborilmaydi va akk
 | Fayl | Vazifasi |
 |---|---|
 | `index.html`, `sudoku.html`, `wordsearch.html`, `krossvord.html` | Labirint, sudoku, so'z qidiruv va sonli krossvord sahifalari (sahifa, algoritm, PDF) |
+| `toplam.html` | To'plam yig'uvchi: 4 generatorning hammasi birlashtirilib, ko'p betli PDF chiqaradi |
 | `manifest.json`, `sw.js` | Telefonga o'rnatish va oflayn ishlash |
 | `icon-*.png`, `apple-touch-icon.png` | Ilova ikonkalari |
 | `og.png` | Havola ulashilganda chiqadigan rasm |
@@ -174,6 +183,14 @@ GitHub Pages bir-ikki daqiqada saytni yangilaydi.
 - Каждая пустая клетка выводится логически (без угадывания) из двух других — как в судоку, решение всегда единственное.
 - PDF с заданием (пустые клетки) и PDF с ответом (решение красным).
 
+### Набор заданий
+
+Пятый раздел — **сборщик набора, который делает всё одним PDF**: https://umarxon7887.github.io/labirint/toplam.html
+
+- Выбираете, сколько заданий каждого вида (лабиринт, судоку, найди слова, кроссворд) и какой сложности нужно.
+- После «Собрать набор» каждое задание показывается в уменьшенном виде — можно заменить его кнопкой «Новое» или убрать кнопкой «Удалить».
+- Когда всё готово, скачиваете один многостраничный **«Задания (PDF)»** или **«Ответы (PDF)»** — каждое задание на своей странице.
+
 ### Конфиденциальность
 
 Всё работает прямо в браузере. Ничего не отправляется на сервер, аккаунт не нужен. На устройстве запоминаются только выбранный язык и стикеры.
@@ -191,6 +208,7 @@ GitHub Pages bir-ikki daqiqada saytni yangilaydi.
 | Файл | Назначение |
 |---|---|
 | `index.html`, `sudoku.html`, `wordsearch.html`, `krossvord.html` | Страницы лабиринта, судоку, «Найди слова» и числового кроссворда (страница, алгоритм, PDF) |
+| `toplam.html` | Сборщик набора: объединяет все 4 генератора и создаёт многостраничный PDF |
 | `manifest.json`, `sw.js` | Установка на телефон и работа офлайн |
 | `icon-*.png`, `apple-touch-icon.png` | Иконки приложения |
 | `og.png` | Картинка при отправке ссылки |

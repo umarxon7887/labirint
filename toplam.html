@@ -1,0 +1,1176 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Topshiriqlar to'plami</title>
+<meta name="description" content="Labirint, sudoku, so'z qidiruv va sonli krossvorddan o'zingiz xohlagan nisbatda to'plam yig'ing, bitta PDF qilib yuklab oling. / Соберите набор из лабиринта, судоку, поиска слов и кроссворда — один PDF.">
+<meta name="theme-color" content="#2F6FED">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Labirint">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Topshiriqlar to'plami / Набор заданий">
+<meta property="og:description" content="Labirint, sudoku, so'z qidiruv va krossvorddan o'z to'plamingizni yig'ing. / Соберите свой набор заданий.">
+<meta property="og:image" content="https://umarxon7887.github.io/labirint/og-toplam.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="uz_UZ">
+<meta property="og:locale:alternate" content="ru_RU">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://umarxon7887.github.io/labirint/og-toplam.png">
+<style>
+  :root { --ink:#1f2a44; --line:#c9d3e3; --bg:#e9eef5; --accent:#2f6fed; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:"Trebuchet MS", system-ui, sans-serif; }
+
+  .wrap { max-width:960px; margin:0 auto; padding:12px; display:grid; gap:14px; }
+  .tabs { display:grid; grid-template-columns:repeat(5,1fr); gap:5px; }
+  .tabs a { text-align:center; padding:9px 2px; border-radius:10px; border:2px solid var(--accent); color:var(--accent);
+            font-weight:700; text-decoration:none; background:#fff; font-size:11.5px; line-height:1.2; }
+  .tabs a[aria-current=page] { background:var(--accent); color:#fff; }
+  .lang { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .lang button { padding:8px; font-size:14px; font-weight:700; border-radius:10px; border:2px solid var(--accent); background:#fff; color:var(--accent); }
+  .lang button[aria-pressed=true] { background:var(--accent); color:#fff; }
+
+  h1 { font-size:20px; margin:4px 0 0; }
+  .sub { margin:-6px 0 0; font-size:13px; color:#5b6784; }
+
+  .card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px; display:grid; gap:10px; }
+  .card h2 { margin:0; font-size:15px; display:flex; align-items:center; gap:8px; }
+  .card h2 input[type=checkbox] { width:18px; height:18px; }
+  .row2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:end; }
+  .fld { display:grid; gap:4px; font-size:12.5px; font-weight:600; color:#3d4a68; }
+  .fld select, .fld input[type=number] { padding:8px; border:1px solid var(--line); border-radius:8px; font:inherit; background:#fff; }
+  .levels { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
+  .lvl { padding:8px 2px; font-size:12px; border-radius:8px; border:2px solid var(--line); background:#fff; color:var(--ink); }
+  .lvl[aria-pressed=true] { background:var(--accent); border-color:var(--accent); color:#fff; }
+
+  button.primary { width:100%; font:inherit; font-weight:700; padding:13px; border-radius:10px; border:2px solid var(--accent);
+                   background:var(--accent); color:#fff; cursor:pointer; }
+  .outbtns { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  button.out { font:inherit; font-weight:700; padding:12px; border-radius:10px; border:2px solid var(--accent); background:#fff; color:var(--accent); cursor:pointer; }
+  button.out:disabled { opacity:.5; }
+  button:focus-visible, select:focus-visible, input:focus-visible, a:focus-visible { outline:3px solid #ffb703; outline-offset:2px; }
+
+  .status { font-size:13px; color:#5b6784; text-align:center; min-height:18px; }
+
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:10px; }
+  .item { background:#fff; border:1px solid var(--line); border-radius:10px; padding:6px; display:grid; gap:6px; }
+  .item canvas { width:100%; height:auto; display:block; border-radius:4px; border:1px solid var(--line); }
+  .item .lbl { font-size:11px; font-weight:700; text-align:center; }
+  .item .btns { display:grid; grid-template-columns:1fr 1fr; gap:5px; }
+  .item .btns button { font-size:11px; padding:5px 2px; border-radius:6px; border:1px solid var(--line); background:#f4f6fb; color:var(--ink); }
+  .empty { text-align:center; color:#8793ab; font-size:14px; padding:20px 0; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav class="tabs" aria-label="Bo'limlar / Разделы">
+    <a href="index.html" data-i18n="tabMaze"></a>
+    <a href="sudoku.html" data-i18n="tabSudoku"></a>
+    <a href="wordsearch.html" data-i18n="tabWords"></a>
+    <a href="krossvord.html" data-i18n="tabCross"></a>
+    <a href="toplam.html" aria-current="page" data-i18n="tabPack"></a>
+  </nav>
+  <div class="lang" role="group" aria-label="Til / Язык">
+    <button type="button" data-lang="uz" aria-pressed="true">O'zbekcha</button>
+    <button type="button" data-lang="ru" aria-pressed="false">Русский</button>
+  </div>
+
+  <div>
+    <h1 data-i18n="h1"></h1>
+    <p class="sub" data-i18n="sub"></p>
+  </div>
+
+  <div class="card">
+    <h2><input type="checkbox" id="on-maze" checked> <span data-i18n="mazeName"></span></h2>
+    <div class="row2">
+      <label class="fld"><span data-i18n="countLbl"></span> <input type="number" id="cnt-maze" min="0" max="20" value="3"></label>
+      <div></div>
+    </div>
+    <div class="levels" id="lvl-maze"></div>
+  </div>
+
+  <div class="card">
+    <h2><input type="checkbox" id="on-sudoku" checked> <span data-i18n="sudokuName"></span></h2>
+    <div class="row2">
+      <label class="fld"><span data-i18n="countLbl"></span> <input type="number" id="cnt-sudoku" min="0" max="20" value="3"></label>
+      <label class="fld"><span data-i18n="typeLbl"></span> <select id="type-sudoku"></select></label>
+    </div>
+    <div class="levels" id="lvl-sudoku"></div>
+  </div>
+
+  <div class="card">
+    <h2><input type="checkbox" id="on-words" checked> <span data-i18n="wordsName"></span></h2>
+    <div class="row2">
+      <label class="fld"><span data-i18n="countLbl"></span> <input type="number" id="cnt-words" min="0" max="20" value="3"></label>
+      <label class="fld"><span data-i18n="catLbl"></span> <select id="cat-words"></select></label>
+    </div>
+    <div class="levels" id="lvl-words"></div>
+  </div>
+
+  <div class="card">
+    <h2><input type="checkbox" id="on-cross" checked> <span data-i18n="crossName"></span></h2>
+    <div class="row2">
+      <label class="fld"><span data-i18n="countLbl"></span> <input type="number" id="cnt-cross" min="0" max="20" value="3"></label>
+      <div></div>
+    </div>
+    <div class="levels" id="lvl-cross"></div>
+  </div>
+
+  <button class="primary" id="buildBtn" data-i18n="buildBtn"></button>
+
+  <div id="reviewWrap" style="display:none">
+    <div class="card">
+      <h2 id="totalLbl"></h2>
+      <div class="outbtns">
+        <button class="out" id="pdfTaskBtn" data-i18n="pdfTaskBtn"></button>
+        <button class="out" id="pdfAnsBtn" data-i18n="pdfAnsBtn"></button>
+      </div>
+      <p class="status" id="status"></p>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+</div>
+
+<canvas id="work" style="display:none"></canvas>
+
+<script>
+const $ = id => document.getElementById(id);
+
+// ---------- Umumiy yordamchilar ----------
+function makeRng(a) {               // seed bilan ishlaydigan tasodifiy son generatori (mulberry32)
+  return () => {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function shuffle(arr, rand) {
+  for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; }
+  return arr;
+}
+function wrapLines(ctx, text, maxW) {
+  if (!text.trim()) return [];
+  const out = [];
+  text.split('\n').forEach(par => {
+    if (!par.trim()) { out.push(''); return; }
+    let line = '';
+    par.trim().split(/\s+/).forEach(word => {
+      const t = line ? line + ' ' + word : word;
+      if (!line || ctx.measureText(t).width <= maxW) line = t;
+      else { out.push(line); line = word; }
+    });
+    out.push(line);
+  });
+  return out;
+}
+const FONT = '"Trebuchet MS","DejaVu Sans",Arial,sans-serif';
+const randInt = (rand, lo, hi) => lo + Math.floor(rand() * (hi - lo + 1));
+
+// ================= LABIRINT MODULI =================
+const MZ = (function () {
+  const DIRS = [[0,-1],[1,0],[0,1],[-1,0]];
+  const HEROES = ['\u{1F9B8}','\u{1F9D2}','\u{1F467}','\u{1F431}','\u{1F436}','\u{1F430}','\u{1F98A}','\u{1F43B}','\u{1F43C}','\u{1F438}','\u{1F916}','\u{1F680}'];
+  const GOALS  = ['\u{1F3C1}','\u{1F3E0}','\u{1F3F0}','\u{1F34E}','\u{1F36F}','\u{1F955}','\u{1F381}','\u2B50','\u{1F333}','\u{1F9B4}','\u{1F9C0}','\u{1F366}'];
+  const SIZES = [[10,14],[20,28],[35,49],[60,85]];
+
+  function regular(n, rot) { return Array.from({length:n}, (_, i) => { const t = rot + i*2*Math.PI/n; return [Math.cos(t), Math.sin(t)]; }); }
+  function starPts() {
+    const p = [];
+    for (let i = 0; i < 10; i++) { const r = i % 2 ? 0.42 : 1, t = -Math.PI/2 + i*Math.PI/5; p.push([r*Math.cos(t), r*Math.sin(t)]); }
+    return p;
+  }
+  function heartPts() {
+    const p = [];
+    for (let i = 0; i < 72; i++) {
+      const t = i*2*Math.PI/72;
+      p.push([16*Math.pow(Math.sin(t),3), -(13*Math.cos(t) - 5*Math.cos(2*t) - 2*Math.cos(3*t) - Math.cos(4*t))]);
+    }
+    const xs = p.map(q => q[0]), ys = p.map(q => q[1]);
+    const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
+    const sc = 2 / Math.max(maxX - minX, maxY - minY), cx = (minX+maxX)/2, cy = (minY+maxY)/2;
+    return p.map(([x, y]) => [(x-cx)*sc, (y-cy)*sc]);
+  }
+  const SHAPES = {
+    rect: null, circle: regular(48, 0), star: starPts(), heart: heartPts(),
+    triangle: [[0,-1],[1,0.75],[-1,0.75]], diamond: [[0,-1],[1,0],[0,1],[-1,0]],
+    house: [[0,-1],[1,-0.15],[0.72,-0.15],[0.72,0.9],[-0.72,0.9],[-0.72,-0.15],[-1,-0.15]], hexagon: regular(6, Math.PI/6)
+  };
+  function inPoly(x, y, poly) {
+    let c = false;
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      const [xi, yi] = poly[i], [xj, yj] = poly[j];
+      if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) c = !c;
+    }
+    return c;
+  }
+  function makeMask(W, H, shape) {
+    const all = Array.from({length:H}, () => Array(W).fill(true));
+    const poly = SHAPES[shape];
+    if (!poly) return all;
+    const m = Math.min(W, H) / 2;
+    const inn = Array.from({length:H}, (_, y) => Array.from({length:W}, (_, x) => inPoly((x + 0.5 - W/2)/m, (y + 0.5 - H/2)/m, poly)));
+    const comp = Array.from({length:H}, () => Array(W).fill(-1));
+    let best = -1, bestSize = 0, id = 0;
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      if (!inn[y][x] || comp[y][x] >= 0) continue;
+      let size = 0; const q = [[x, y]]; comp[y][x] = id;
+      for (let i = 0; i < q.length; i++) {
+        const [cx, cy] = q[i]; size++;
+        DIRS.forEach(([dx, dy]) => {
+          const nx = cx+dx, ny = cy+dy;
+          if (nx>=0 && ny>=0 && nx<W && ny<H && inn[ny][nx] && comp[ny][nx] < 0) { comp[ny][nx] = id; q.push([nx, ny]); }
+        });
+      }
+      if (size > bestSize) { bestSize = size; best = id; }
+      id++;
+    }
+    if (bestSize < 12) return all;
+    return comp.map(row => row.map(c => c === best));
+  }
+  function build(W, H, seed, shape) {
+    const rand = makeRng(seed);
+    const inn = makeMask(W, H, shape);
+    const isIn = (x, y) => x >= 0 && y >= 0 && x < W && y < H && inn[y][x];
+    const cells = [];
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (inn[y][x]) cells.push([x, y]);
+    const open = Array.from({length:H}, () => Array.from({length:W}, () => [false,false,false,false]));
+    const seen = Array.from({length:H}, () => Array(W).fill(false));
+    const s0 = cells[Math.floor(rand()*cells.length)];
+    const stack = [s0];
+    seen[s0[1]][s0[0]] = true;
+    while (stack.length) {
+      const [x, y] = stack[stack.length-1];
+      const nb = [];
+      DIRS.forEach(([dx,dy], d) => { if (isIn(x+dx, y+dy) && !seen[y+dy][x+dx]) nb.push(d); });
+      if (!nb.length) { stack.pop(); continue; }
+      const d = nb[Math.floor(rand()*nb.length)];
+      const nx = x+DIRS[d][0], ny = y+DIRS[d][1];
+      open[y][x][d] = true; open[ny][nx][(d+2)%4] = true; seen[ny][nx] = true;
+      stack.push([nx, ny]);
+    }
+    function bfs(fx, fy) {
+      const dist = Array.from({length:H}, () => Array(W).fill(-1));
+      const prev = {};
+      dist[fy][fx] = 0;
+      const q = [[fx, fy]];
+      for (let i = 0; i < q.length; i++) {
+        const [x, y] = q[i];
+        DIRS.forEach(([dx,dy], d) => {
+          if (!open[y][x][d]) return;
+          const nx = x+dx, ny = y+dy;
+          if (dist[ny][nx] < 0) { dist[ny][nx] = dist[y][x]+1; prev[nx+','+ny] = [x, y]; q.push([nx, ny]); }
+        });
+      }
+      return { q, prev };
+    }
+    const isEdge = (x, y) => DIRS.some(([dx,dy]) => !isIn(x+dx, y+dy));
+    const mx = cells.reduce((t, c) => t + c[0], 0) / cells.length;
+    const my = cells.reduce((t, c) => t + c[1], 0) / cells.length;
+    const dc = c => Math.hypot(c[0]-mx, c[1]-my);
+    const edge = cells.filter(c => isEdge(c[0], c[1]));
+    const maxD = Math.max(...edge.map(dc));
+    const far = edge.filter(c => dc(c) >= 0.8*maxD);
+    const a = far[Math.floor(rand()*far.length)];
+    let e = null, bestD = -1;
+    far.forEach(c => { const d = Math.hypot(c[0]-a[0], c[1]-a[1]); if (c !== a && d > bestD) { bestD = d; e = c; } });
+    if (!e) e = edge.find(c => c !== a) || cells.find(c => c !== a);
+    const b = bfs(a[0], a[1]);
+    const outDir = c => {
+      let best = 0, bs = -Infinity;
+      for (let d = 0; d < 4; d++) {
+        if (isIn(c[0]+DIRS[d][0], c[1]+DIRS[d][1])) continue;
+        const sc = DIRS[d][0]*(c[0]-mx) + DIRS[d][1]*(c[1]-my);
+        if (sc > bs) { bs = sc; best = d; }
+      }
+      return best;
+    };
+    const path = [];
+    for (let c = e; c; c = b.prev[c[0]+','+c[1]]) path.push(c);
+    path.reverse();
+    let minX = W, maxX = 0, minY = H, maxY = 0;
+    cells.forEach(([x, y]) => { minX = Math.min(minX, x); maxX = Math.max(maxX, x); minY = Math.min(minY, y); maxY = Math.max(maxY, y); });
+    return { isIn, open, start:a, end:e, sDir:outDir(a), eDir:outDir(e), path, bbox:{minX, maxX, minY, maxY}, count:cells.length };
+  }
+  function drawMarker(ctx, emoji, cx, cy, size, k) {
+    ctx.font = `${size*0.85*k}px "Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#1f2a44';
+    ctx.fillText(emoji, cx*k, cy*k);
+  }
+  const LBL = {
+    uz: { defTitle: "Qahramonga uyiga yo'l topishga yordam ber!",
+          shapes: {rect:"To'rtburchak", circle:"Doira", star:"Yulduz", heart:"Yurak", triangle:"Uchburchak", diamond:"Romb", house:"Uy", hexagon:"Oltiburchak"},
+          foot: (n, W, H, sh) => `Labirint raqami: ${n} (${W}\u00d7${H}${sh ? ', ' + sh : ''})` },
+    ru: { defTitle: "Помоги герою найти дорогу домой!",
+          shapes: {rect:"Прямоугольник", circle:"Круг", star:"Звезда", heart:"Сердце", triangle:"Треугольник", diamond:"Ромб", house:"Домик", hexagon:"Шестиугольник"},
+          foot: (n, W, H, sh) => `Лабиринт № ${n} (${W}\u00d7${H}${sh ? ', ' + sh : ''})` }
+  };
+  function draw(canvas, k, seed, level, showSolution, lang) {
+    const pr = makeRng(seed*13 + 1);
+    const shapeKeys = Object.keys(SHAPES);
+    const shape = shapeKeys[Math.floor(pr()*shapeKeys.length)];
+    const hero = HEROES[Math.floor(pr()*HEROES.length)];
+    const goal = GOALS[Math.floor(pr()*GOALS.length)];
+    const [W, H] = SIZES[level];
+    const L = LBL[lang];
+    const m = build(W, H, seed, shape);
+    const ctx = canvas.getContext('2d');
+    canvas.width = Math.round(210*k); canvas.height = Math.round(297*k);
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const M = 14, areaW = 210 - 2*M;
+    const fontPt = 24;
+    const fpx = fontPt * 0.3528 * k;
+    ctx.font = `700 ${fpx}px ${FONT}`;
+    ctx.fillStyle = '#1f2a44'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    const lines = wrapLines(ctx, L.defTitle, areaW*k);
+    const lh = fpx * 1.25;
+    lines.forEach((ln, i) => ctx.fillText(ln, 105*k, M*k + i*lh));
+    const titleBottom = M + (lines.length * lh) / k;
+    const footH = 7;
+    ctx.font = `${8*0.3528*k}px ${FONT}`;
+    ctx.fillStyle = '#7b869c'; ctx.textAlign = 'right'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(L.foot(seed, W, H, shape === 'rect' ? '' : L.shapes[shape]), (210-M)*k, (297-M)*k);
+    const top = titleBottom + (lines.length ? 8 : 0);
+    const areaH = (297 - M - footH) - top;
+    const bb = m.bbox, gw = bb.maxX - bb.minX + 1, gh = bb.maxY - bb.minY + 1;
+    const cell0 = Math.min(areaW / gw, areaH / gh);
+    const S = Math.min(14, Math.max(9, cell0 * 0.95));
+    const pad = [0, 0, 0, 0];
+    pad[m.sDir] = S + 1; pad[m.eDir] = Math.max(pad[m.eDir], S + 1);
+    const cell = Math.min((areaW - pad[1] - pad[3]) / gw, (areaH - pad[0] - pad[2]) / gh);
+    const contentW = gw*cell + pad[1] + pad[3], contentH = gh*cell + pad[0] + pad[2];
+    const ox = 105 - contentW/2 + pad[3] - bb.minX*cell;
+    const oy = top + (areaH - contentH)/2 + pad[0] - bb.minY*cell;
+    const gate = (x, y, d) => (x === m.start[0] && y === m.start[1] && d === m.sDir) || (x === m.end[0] && y === m.end[1] && d === m.eDir);
+    ctx.strokeStyle = '#1f2a44';
+    ctx.lineWidth = Math.min(0.9, Math.max(0.3, cell*0.09)) * k;
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.beginPath();
+    for (let y = bb.minY; y <= bb.maxY; y++) {
+      for (let x = bb.minX; x <= bb.maxX; x++) {
+        if (!m.isIn(x, y)) continue;
+        const x0 = (ox + x*cell)*k, y0 = (oy + y*cell)*k, x1 = x0 + cell*k, y1 = y0 + cell*k;
+        if ((!m.isIn(x, y-1) || !m.open[y][x][0]) && !gate(x, y, 0)) { ctx.moveTo(x0, y0); ctx.lineTo(x1, y0); }
+        if ((!m.isIn(x-1, y) || !m.open[y][x][3]) && !gate(x, y, 3)) { ctx.moveTo(x0, y0); ctx.lineTo(x0, y1); }
+        if (!m.isIn(x, y+1) && !gate(x, y, 2)) { ctx.moveTo(x0, y1); ctx.lineTo(x1, y1); }
+        if (!m.isIn(x+1, y) && !gate(x, y, 1)) { ctx.moveTo(x1, y0); ctx.lineTo(x1, y1); }
+      }
+    }
+    ctx.stroke();
+    const ctr = ([x, y]) => [ox + (x+.5)*cell, oy + (y+.5)*cell];
+    const outside = (c, d) => { const [cx, cy] = ctr(c), off = cell/2 + S/2 + 0.5; return [cx + DIRS[d][0]*off, cy + DIRS[d][1]*off]; };
+    const sp = outside(m.start, m.sDir), ep = outside(m.end, m.eDir);
+    if (showSolution) {
+      ctx.strokeStyle = 'rgba(229,72,77,.85)';
+      ctx.lineWidth = Math.min(2, Math.max(0.5, cell * 0.22)) * k;
+      ctx.beginPath();
+      [sp, ...m.path.map(ctr), ep].forEach(([px, py], i) => { i ? ctx.lineTo(px*k, py*k) : ctx.moveTo(px*k, py*k); });
+      ctx.stroke();
+    }
+    drawMarker(ctx, hero, sp[0], sp[1], S, k);
+    drawMarker(ctx, goal, ep[0], ep[1], S, k);
+  }
+  return { draw, name: { uz: "Labirint", ru: "Лабиринт" } };
+})();
+
+// ================= SUDOKU MODULI =================
+const SD = (function () {
+  const TYPES = {
+    '4': {N:4, br:2, bc:2}, '5': {N:5, jig:true}, '6': {N:6, br:2, bc:3}, '7': {N:7, jig:true},
+    '8': {N:8, br:2, bc:4}, '9': {N:9, br:3, bc:3}, '9x': {N:9, br:3, bc:3, diag:true}
+  };
+  const LEVEL_CLUES = {'4':[11,9,7,6], '5':[16,13,11,9], '6':[24,20,17,14], '7':[32,27,23,19], '8':[40,33,28,24], '9':[42,34,29,25], '9x':[40,32,27,23]};
+  const LEVEL_MODE = ['naked', 'singles', 'none', 'none'];
+  function assemble(t, region) {
+    const N = t.N, units = [];
+    for (let r = 0; r < N; r++) units.push(Array.from({length:N}, (_, c) => r*N + c));
+    for (let c = 0; c < N; c++) units.push(Array.from({length:N}, (_, r) => r*N + c));
+    for (let id = 0; id < N; id++) units.push(region.map((v, i) => v === id ? i : -1).filter(i => i >= 0));
+    if (t.diag) {
+      units.push(Array.from({length:N}, (_, i) => i*N + i));
+      units.push(Array.from({length:N}, (_, i) => i*N + (N-1-i)));
+    }
+    const peerSets = Array.from({length:N*N}, () => new Set());
+    units.forEach(u => u.forEach(a => u.forEach(b => { if (a !== b) peerSets[a].add(b); })));
+    return { ...t, region, units, peers: peerSets.map(s => [...s]) };
+  }
+  function makeJigsaw(N, rand) {
+    for (let attempt = 0; attempt < 300; attempt++) {
+      const reg = Array(N*N).fill(-1), size = Array(N).fill(0);
+      const perm = shuffle(Array.from({length:N}, (_, i) => i), rand);
+      for (let r = 0; r < N; r++) { reg[r*N + perm[r]] = r; size[r] = 1; }
+      let assigned = N;
+      while (assigned < N*N) {
+        const options = [];
+        for (let i = 0; i < N*N; i++) {
+          const k = reg[i];
+          if (k < 0 || size[k] >= N) continue;
+          const r = Math.floor(i / N), c = i % N;
+          if (r > 0   && reg[i-N] < 0) options.push([k, i-N]);
+          if (r < N-1 && reg[i+N] < 0) options.push([k, i+N]);
+          if (c > 0   && reg[i-1] < 0) options.push([k, i-1]);
+          if (c < N-1 && reg[i+1] < 0) options.push([k, i+1]);
+        }
+        if (!options.length) break;
+        const [k, j] = options[Math.floor(rand() * options.length)];
+        reg[j] = k; size[k]++; assigned++;
+      }
+      if (assigned === N*N) return reg;
+    }
+    return null;
+  }
+  const specCache = {};
+  function buildSpec(key, seed) {
+    const t = TYPES[key], N = t.N;
+    const ck = t.jig ? key + '|' + seed : key;
+    if (specCache[ck]) return specCache[ck];
+    let spec = null;
+    if (t.jig) {
+      const rand = makeRng(seed * 17 + 3);
+      for (let a = 0; a < 200 && !spec; a++) {
+        const reg = makeJigsaw(N, rand);
+        if (!reg) continue;
+        const cand = assemble(t, reg);
+        if (countSolutions(cand, Array(N*N).fill(0), 1) >= 1) spec = cand;
+      }
+      if (!spec) spec = assemble(t, Array.from({length:N*N}, (_, i) => Math.floor(i / N)));
+    } else {
+      spec = assemble(t, Array.from({length:N*N}, (_, i) => Math.floor(Math.floor(i / N) / t.br) * (N / t.bc) + Math.floor((i % N) / t.bc)));
+    }
+    return (specCache[ck] = spec);
+  }
+  const popcount = m => { let c = 0; while (m) { m &= m - 1; c++; } return c; };
+  function countSolutions(spec, g, limit, rand, firstOut) {
+    const full = (1 << spec.N) - 1;
+    let count = 0;
+    function rec() {
+      let best = -1, bestMask = 0, bestCnt = 99;
+      for (let i = 0; i < g.length; i++) {
+        if (g[i]) continue;
+        let used = 0; const ps = spec.peers[i];
+        for (let k = 0; k < ps.length; k++) { const v = g[ps[k]]; if (v) used |= 1 << (v-1); }
+        const m = full & ~used, c = popcount(m);
+        if (c === 0) return;
+        if (c < bestCnt) { bestCnt = c; best = i; bestMask = m; if (c === 1) break; }
+      }
+      if (best < 0) { count++; if (firstOut && count === 1) firstOut.push(...g); return; }
+      const digits = [];
+      for (let d = 1; d <= spec.N; d++) if (bestMask & (1 << (d-1))) digits.push(d);
+      if (rand) shuffle(digits, rand);
+      for (const d of digits) { g[best] = d; rec(); g[best] = 0; if (count >= limit) return; }
+    }
+    rec();
+    return count;
+  }
+  function solvableBySingles(spec, g0, hidden) {
+    const g = g0.slice(), N = spec.N, full = (1 << N) - 1;
+    const cand = i => { let used = 0; const ps = spec.peers[i]; for (let k = 0; k < ps.length; k++) { const v = g[ps[k]]; if (v) used |= 1 << (v-1); } return full & ~used; };
+    let progress = true;
+    while (progress) {
+      progress = false;
+      for (let i = 0; i < g.length; i++) {
+        if (g[i]) continue;
+        const m = cand(i);
+        if (m === 0) return false;
+        if ((m & (m - 1)) === 0) { g[i] = Math.log2(m) + 1; progress = true; }
+      }
+      if (!progress && hidden) {
+        outer:
+        for (const u of spec.units) {
+          for (let d = 1; d <= N; d++) {
+            if (u.some(i => g[i] === d)) continue;
+            const spots = u.filter(i => !g[i] && (cand(i) & (1 << (d-1))));
+            if (spots.length === 1) { g[spots[0]] = d; progress = true; break outer; }
+          }
+        }
+      }
+    }
+    return g.every(v => v);
+  }
+  function generate(key, level, seed) {
+    const spec = buildSpec(key, seed), total = spec.N * spec.N;
+    const sol = [];
+    countSolutions(spec, Array(total).fill(0), 1, makeRng(seed), sol);
+    const rand = makeRng(seed * 31 + 7);
+    const target = LEVEL_CLUES[key][level], mode = LEVEL_MODE[level];
+    const attempts = level === 3 ? 6 : 1;
+    let bestG = null, bestClues = total + 1;
+    for (let a = 0; a < attempts && bestClues > target; a++) {
+      const order = shuffle(Array.from({length:total}, (_, i) => i), rand);
+      const g = sol.slice();
+      let clues = total;
+      for (const i of order) {
+        if (clues <= target) break;
+        if (!g[i]) continue;
+        const j = total - 1 - i;
+        const cells = (i === j || !g[j]) ? [i] : [i, j];
+        const backup = cells.map(c => g[c]);
+        cells.forEach(c => { g[c] = 0; });
+        const ok = mode === 'none' ? countSolutions(spec, g, 2) === 1 : solvableBySingles(spec, g, mode === 'singles');
+        if (ok) clues -= cells.length; else cells.forEach((c, k) => { g[c] = backup[k]; });
+      }
+      if (clues < bestClues) { bestClues = clues; bestG = g; }
+    }
+    return { spec, sol, puzzle: bestG, clues: bestClues, total };
+  }
+  const LBL = {
+    uz: { typeFoot: {'4':'4\u00d74', '5':'5\u00d75 jigsaw', '6':'6\u00d76', '7':'7\u00d77 jigsaw', '8':'8\u00d78', '9':'9\u00d79', '9x':'9\u00d79 X'},
+          types: {'4':'4\u00d74', '5':'5\u00d75', '6':'6\u00d76', '7':'7\u00d77', '8':'8\u00d78', '9':'9\u00d79 klassik', '9x':'9\u00d79 diagonal'},
+          levels: ["Oson","O'rta","Qiyin","Juda qiyin"], defTitle: "Sudoku'ni yech!",
+          rule: (N, jig, diag) => `Har bir qator, ustun va ${jig ? "qalin chiziq bilan chegaralangan shaklda" : "qalin chiziqli katakchada"} 1 dan ${N} gacha raqamlar takrorlanmasin.` + (diag ? " Ikkala diagonalda ham." : ""),
+          foot: (n, type, level) => `Sudoku raqami: ${n} (${type}, ${level})` },
+    ru: { typeFoot: {'4':'4\u00d74', '5':'5\u00d75 jigsaw', '6':'6\u00d76', '7':'7\u00d77 jigsaw', '8':'8\u00d78', '9':'9\u00d79', '9x':'9\u00d79 X'},
+          types: {'4':'4\u00d74', '5':'5\u00d75', '6':'6\u00d76', '7':'7\u00d77', '8':'8\u00d78', '9':'9\u00d79 классика', '9x':'9\u00d79 диагональ'},
+          levels: ["Легко","Средне","Сложно","Очень сложно"], defTitle: "Реши судоку!",
+          rule: (N, jig, diag) => `В каждой строке, столбце и ${jig ? "фигуре, обведённой жирной линией," : "блоке с жирной границей"} цифры от 1 до ${N} не должны повторяться.` + (diag ? " То же правило для обеих диагоналей." : ""),
+          foot: (n, type, level) => `Судоку № ${n} (${type}, ${level})` }
+  };
+  function draw(canvas, k, seed, level, type, showSolution, lang) {
+    const key = type === 'mixed' ? Object.keys(TYPES)[Math.floor(makeRng(seed*53+9)()*Object.keys(TYPES).length)] : type;
+    const L = LBL[lang];
+    const p = generate(key, level, seed);
+    const spec = p.spec, N = spec.N;
+    const ctx = canvas.getContext('2d');
+    canvas.width = Math.round(210*k); canvas.height = Math.round(297*k);
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const M = 14, areaW = 210 - 2*M;
+    const fpx = 24 * 0.3528 * k;
+    ctx.font = `700 ${fpx}px ${FONT}`;
+    ctx.fillStyle = '#1f2a44'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    const lines = wrapLines(ctx, L.defTitle, areaW*k);
+    const lh = fpx * 1.25;
+    lines.forEach((ln, i) => ctx.fillText(ln, 105*k, M*k + i*lh));
+    const titleBottom = M + (lines.length * lh) / k;
+    const footH = 7;
+    ctx.font = `${8*0.3528*k}px ${FONT}`;
+    ctx.fillStyle = '#7b869c'; ctx.textAlign = 'right'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(L.foot(seed, L.typeFoot[key], L.levels[level]), (210-M)*k, (297-M)*k);
+    const ruleFont = 11 * 0.3528 * k;
+    ctx.font = `${ruleFont}px ${FONT}`;
+    const ruleLines = wrapLines(ctx, L.rule(N, spec.jig, spec.diag), areaW*k);
+    const ruleH = ruleLines.length * ruleFont * 1.35 / k;
+    const top = titleBottom + (lines.length ? 8 : 0);
+    const areaH = (297 - M - footH) - top;
+    const cellMm = Math.min(areaW / N, 30, (areaH - ruleH - 8) / N);
+    const size = cellMm * N;
+    const blockH = size + 8 + ruleH;
+    const gx = 105 - size/2;
+    const gy = top + Math.max(0, (areaH - blockH) / 2);
+    const cx = c => (gx + c*cellMm) * k, cy = r => (gy + r*cellMm) * k;
+    if (spec.diag) {
+      ctx.fillStyle = '#e6ecf8';
+      for (let i = 0; i < N; i++) {
+        ctx.fillRect(cx(i), cy(i), cellMm*k, cellMm*k);
+        if (i !== N-1-i) ctx.fillRect(cx(N-1-i), cy(i), cellMm*k, cellMm*k);
+      }
+    }
+    if (spec.jig) {
+      const PAL = ['#e8f0fc', '#fdf0dc', '#e6f5e9', '#f4e8f4', '#f0f0f0'];
+      const adj = Array.from({length:N}, () => new Set());
+      for (let i = 0; i < N*N; i++) {
+        const r = Math.floor(i / N), c = i % N;
+        if (c < N-1 && spec.region[i] !== spec.region[i+1]) { adj[spec.region[i]].add(spec.region[i+1]); adj[spec.region[i+1]].add(spec.region[i]); }
+        if (r < N-1 && spec.region[i] !== spec.region[i+N]) { adj[spec.region[i]].add(spec.region[i+N]); adj[spec.region[i+N]].add(spec.region[i]); }
+      }
+      const col = Array(N).fill(-1);
+      for (let id = 0; id < N; id++) {
+        const used = new Set([...adj[id]].map(x => col[x]));
+        let c = 0; while (used.has(c)) c++;
+        col[id] = c;
+      }
+      for (let i = 0; i < N*N; i++) { ctx.fillStyle = PAL[col[spec.region[i]] % PAL.length]; ctx.fillRect(cx(i % N), cy(Math.floor(i / N)), cellMm*k, cellMm*k); }
+    }
+    if (showSolution && !spec.jig) {
+      ctx.fillStyle = '#fdecec';
+      for (let i = 0; i < N*N; i++) if (!p.puzzle[i]) ctx.fillRect(cx(i % N), cy(Math.floor(i / N)), cellMm*k, cellMm*k);
+    }
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    for (let i = 0; i < N*N; i++) {
+      const given = p.puzzle[i], v = given || (showSolution ? p.sol[i] : 0);
+      if (!v) continue;
+      const x = cx(i % N) + cellMm*k/2, y = cy(Math.floor(i / N)) + cellMm*k/2;
+      ctx.font = `${given ? 700 : 600} ${cellMm*0.62*k}px ${FONT}`;
+      ctx.fillStyle = given ? '#1f2a44' : '#e5484d';
+      ctx.fillText(String(v), x, y + cellMm*0.04*k);
+    }
+    ctx.strokeStyle = '#1f2a44'; ctx.lineCap = 'square';
+    ctx.lineWidth = 0.3 * k;
+    ctx.beginPath();
+    for (let i = 0; i <= N; i++) { ctx.moveTo(cx(i), cy(0)); ctx.lineTo(cx(i), cy(N)); ctx.moveTo(cx(0), cy(i)); ctx.lineTo(cx(N), cy(i)); }
+    ctx.stroke();
+    ctx.lineWidth = 1.0 * k;
+    ctx.beginPath();
+    for (let r = 0; r < N; r++) {
+      for (let c = 0; c < N; c++) {
+        const i = r*N + c;
+        if (c === 0 || spec.region[i-1] !== spec.region[i]) { ctx.moveTo(cx(c), cy(r)); ctx.lineTo(cx(c), cy(r+1)); }
+        if (c === N-1) { ctx.moveTo(cx(N), cy(r)); ctx.lineTo(cx(N), cy(r+1)); }
+        if (r === 0 || spec.region[i-N] !== spec.region[i]) { ctx.moveTo(cx(c), cy(r)); ctx.lineTo(cx(c+1), cy(r)); }
+        if (r === N-1) { ctx.moveTo(cx(c), cy(N)); ctx.lineTo(cx(c+1), cy(N)); }
+      }
+    }
+    ctx.stroke();
+    ctx.font = `${ruleFont}px ${FONT}`;
+    ctx.fillStyle = '#3d4a68'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ruleLines.forEach((ln, i) => ctx.fillText(ln, 105*k, (gy + size + 8)*k + i*ruleFont*1.35));
+  }
+  return { draw, name: { uz: "Sudoku", ru: "Судоку" }, types: Object.keys(TYPES), typeLabel: LBL };
+})();
+
+// ================= SO'Z QIDIRUV MODULI =================
+const WS = (function () {
+  const BANKS = {
+    uz: {
+      school:  ['DARS','MAKTAB','DEFTAR','QALAM','KITOB','SINF','DOSKA','PARTA','RYUKZAK','LINEYKA','PENAL','KOMPYUTER','TEST','BAHO','RANG','JADVAL','XARITA','GLOBUS','MIKROSKOP','LOYIHA','REFERAT','DIREKTOR','TANAFFUS','DARSLIK','JURNAL','MARKER'],
+      autumn:  ['KUZ','YAPROQ','SHAMOL','YOMGIR','BULUT','TUMAN','HOSIL','OLMA','NOK','UZUM','QOVUN','TARVUZ','DALA','DEHQON','SOVUQ','PAXTA','BEDA','JAVDAR','BUGDOY','OLXORI','ANJIR','NOYABR','OKTABR','SENTABR','SHABNAM','DARAXT'],
+      animals: ['MUSHUK','KUCHUK','QUYON','TULKI','AYIQ','BURI','SHER','YOLBARS','FIL','ZEBRA','MAYMUN','TOVUS','LAYLAK','TOSHBAQA','SICHQON','ILON','QARGA','ORDAK','TUYA','ARSLON','QOPLON','TIMSOH','TOVUQ','XOROZ','QIRGOVUL','KALAMUSH'],
+      food:    ['NON','SHOLI','OSH','SOMSA','MANTI','LAGMON','SALAT','SUT','PISHLOQ','TUXUM','GOSHT','BALIQ','MEVA','SABZAVOT','QOVURDOQ','SHURVA','NORIN','KABOB','HOLVA','ASAL','QAYMOQ','QATIQ','PIYOZ','SABZI','KARTOSHKA','POMIDOR'],
+      sport:   ['FUTBOL','BASKETBOL','VOLEYBOL','SUZISH','YUGURISH','SHAXMAT','VELOSIPED','TENNIS','BOKS','KURASH','CHANGI','STADION','TOP','MEDAL','MASHQ','SPORTZAL','MURABBIY','CHEMPION','GANTEL','TRENAJOR','MARAFON','GIMNASTIKA','DARVOZA','HAKAM','YUTUQ','MUSOBAQA'],
+      space:   ['QUYOSH','YULDUZ','SAYYORA','RAKETA','KOSMOS','YER','MARS','KOMETA','GALAKTIKA','TELESKOP','ASTRONAVT','ORBITA','SUNIY','VENERA','YUPITER','SATURN','NEPTUN','MERKURIY','PLUTON','METEOR','SPUTNIK','ASTEROID','STANSIYA','GRAVITATSIYA','ATMOSFERA','MODUL']
+    },
+    ru: {
+      school:  ['ШКОЛА','УРОК','ТЕТРАДЬ','РУЧКА','КНИГА','КЛАСС','ДОСКА','ПАРТА','РЮКЗАК','ЛИНЕЙКА','ПЕНАЛ','КОМПЬЮТЕР','ТЕСТ','ОЦЕНКА','ДИРЕКТОР','ЖУРНАЛ','КАРТА','ГЛОБУС','МИКРОСКОП','ПРОЕКТ','ДОКЛАД','ПЕРЕМЕНА','УЧЕБНИК','МАРКЕР','ШКАФ','СТОЛ'],
+      autumn:  ['ОСЕНЬ','ЛИСТЬЯ','ВЕТЕР','ДОЖДЬ','ТУЧА','ТУМАН','УРОЖАЙ','ЯБЛОКО','ГРУША','ВИНОГРАД','ТЫКВА','АРБУЗ','ПОЛЕ','ФЕРМЕР','ХОЛОД','ПШЕНИЦА','СЛИВА','ИНЖИР','НОЯБРЬ','ОКТЯБРЬ','СЕНТЯБРЬ','РОСА','ДЕРЕВО','ЗОНТ','ЛУЖА','ГРИБ'],
+      animals: ['КОШКА','СОБАКА','ЗАЯЦ','ЛИСА','МЕДВЕДЬ','ВОЛК','ЛЕВ','ТИГР','СЛОН','ЗЕБРА','ОБЕЗЬЯНА','ПАВЛИН','АИСТ','ЧЕРЕПАХА','МЫШЬ','ЗМЕЯ','ВОРОНА','УТКА','ВЕРБЛЮД','ЛЕОПАРД','КРОКОДИЛ','ПЕТУХ','КУРИЦА','ФАЗАН','КРЫСА','ЛОШАДЬ'],
+      food:    ['ХЛЕБ','РИС','ПЛОВ','САМСА','МАНТЫ','ЛАГМАН','САЛАТ','МОЛОКО','СЫР','ЯЙЦО','МЯСО','РЫБА','ФРУКТ','ОВОЩ','ЖАРКОЕ','СУП','НОРИН','КЕБАБ','ХАЛВА','МЁД','СМЕТАНА','ЙОГУРТ','ЛУК','МОРКОВЬ','КАРТОФЕЛЬ','ПОМИДОР'],
+      sport:   ['ФУТБОЛ','БАСКЕТБОЛ','ВОЛЕЙБОЛ','ПЛАВАНИЕ','БЕГ','ШАХМАТЫ','ВЕЛОСИПЕД','ТЕННИС','БОКС','БОРЬБА','ЛЫЖИ','СТАДИОН','МЯЧ','МЕДАЛЬ','ТРЕНЕР','ЧЕМПИОН','ГАНТЕЛЬ','ТРЕНАЖЁР','МАРАФОН','ГИМНАСТИКА','ВОРОТА','СУДЬЯ','ПОБЕДА','СОРЕВНОВАНИЕ','ЗАРЯДКА','ЗАЛ'],
+      space:   ['ЛУНА','СОЛНЦЕ','ЗВЕЗДА','ПЛАНЕТА','РАКЕТА','КОСМОС','ЗЕМЛЯ','МАРС','КОМЕТА','ГАЛАКТИКА','ТЕЛЕСКОП','КОСМОНАВТ','СПУТНИК','ОРБИТА','ЮПИТЕР','САТУРН','НЕПТУН','МЕРКУРИЙ','ПЛУТОН','МЕТЕОР','АСТЕРОИД','СТАНЦИЯ','ГРАВИТАЦИЯ','АТМОСФЕРА','МОДУЛЬ','ВСЕЛЕННАЯ']
+    }
+  };
+  const CAT_KEYS = ['school','autumn','animals','food','sport','space'];
+  const DIR_VEC = [[1,0],[0,1],[1,1],[1,-1],[-1,0],[0,-1],[-1,-1],[-1,1]];
+  const LEVEL_DIRS = [[0,1],[0,1,2],[0,1,2,3,4,5],[0,1,2,3,4,5,6,7]];
+  const LEVEL_K = [2.7, 2.3, 1.95, 1.65];
+  const LEVEL_WORDCOUNT = [8, 10, 12, 14];
+  function pickWords(cat, level, seed, language) {
+    const pool = BANKS[language][cat];
+    const count = Math.min(LEVEL_WORDCOUNT[level], pool.length);
+    return shuffle(pool.slice(), makeRng(seed * 7 + 3)).slice(0, count);
+  }
+  function tryBuild(words, N, dirs, rand) {
+    const grid = Array(N * N).fill('');
+    const placed = [];
+    const order = words.slice().sort((a, b) => b.length - a.length);
+    for (const w of order) {
+      let ok = false;
+      const dirOrder = shuffle(dirs.slice(), rand);
+      for (let t = 0; t < 250 && !ok; t++) {
+        const d = dirOrder[t % dirOrder.length];
+        const [dx, dy] = DIR_VEC[d];
+        const r0 = Math.floor(rand() * N), c0 = Math.floor(rand() * N);
+        const er = r0 + dy * (w.length - 1), ec = c0 + dx * (w.length - 1);
+        if (er < 0 || er >= N || ec < 0 || ec >= N) continue;
+        let fits = true;
+        for (let i = 0; i < w.length; i++) {
+          const ch = grid[(r0 + dy*i) * N + (c0 + dx*i)];
+          if (ch && ch !== w[i]) { fits = false; break; }
+        }
+        if (!fits) continue;
+        for (let i = 0; i < w.length; i++) grid[(r0 + dy*i) * N + (c0 + dx*i)] = w[i];
+        placed.push({ word: w, cells: Array.from({length: w.length}, (_, i) => [r0 + dy*i, c0 + dx*i]) });
+        ok = true;
+      }
+      if (!ok) return null;
+    }
+    return { grid, placed };
+  }
+  const ALPHA = { uz: 'ABCDEFGHIJKLMNOPQRSTUVXYZ', ru: 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ' };
+  function generate(cat, level, seed, language) {
+    const words = pickWords(cat, level, seed, language);
+    const dirs = LEVEL_DIRS[level];
+    const longest = Math.max(...words.map(w => w.length));
+    const totalLetters = words.reduce((s, w) => s + w.length, 0);
+    let N = Math.max(longest, Math.ceil(Math.sqrt(totalLetters * LEVEL_K[level])), 9);
+    N = Math.min(N, 22);
+    let result = null;
+    for (let grow = 0; grow < 12 && !result; grow++) {
+      result = tryBuild(words, N, dirs, makeRng(seed + grow * 977));
+      if (!result) N = Math.min(N + 1, 24);
+    }
+    if (!result) result = { grid: Array(N*N).fill(''), placed: [] };
+    const alpha = ALPHA[language];
+    const rand = makeRng(seed * 131 + 11);
+    const grid = result.grid.map(ch => ch || alpha[Math.floor(rand() * alpha.length)]);
+    return { N, grid, words: result.placed, total: words.length };
+  }
+  const PALETTE = ['#fde2e2','#fde8cf','#fdf3c7','#dcf3df','#d9edf7','#e3ddf4','#fbdce9'];
+  const LBL = {
+    uz: { defTitle: "Berilgan so'zlarni jadvaldan toping!", cats: {school:'Maktab', autumn:'Kuz', animals:'Hayvonlar', food:'Ovqatlar', sport:'Sport', space:'Fazo'},
+          levels: ["Oson","O'rta","Qiyin","Juda qiyin"], foot: (n, cat, level) => `So'z qidiruv raqami: ${n} (${cat}, ${level})` },
+    ru: { defTitle: "Найди все слова в таблице!", cats: {school:'Школа', autumn:'Осень', animals:'Животные', food:'Еда', sport:'Спорт', space:'Космос'},
+          levels: ["Легко","Средне","Сложно","Очень сложно"], foot: (n, cat, level) => `Найди слова № ${n} (${cat}, ${level})` }
+  };
+  function draw(canvas, k, seed, level, cat, showSolution, lang) {
+    const realCat = cat === 'mixed' ? CAT_KEYS[Math.floor(makeRng(seed*91+5)()*CAT_KEYS.length)] : cat;
+    const L = LBL[lang];
+    const p = generate(realCat, level, seed, lang);
+    const N = p.N;
+    const ctx = canvas.getContext('2d');
+    canvas.width = Math.round(210*k); canvas.height = Math.round(297*k);
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const M = 14, areaW = 210 - 2*M;
+    const fpx = 24 * 0.3528 * k;
+    ctx.font = `700 ${fpx}px ${FONT}`;
+    ctx.fillStyle = '#1f2a44'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    const lines = wrapLines(ctx, L.defTitle, areaW*k);
+    const lh = fpx * 1.25;
+    lines.forEach((ln, i) => ctx.fillText(ln, 105*k, M*k + i*lh));
+    let y = M + (lines.length * lh) / k + (lines.length ? 8 : 0);
+    const footH = 7;
+    ctx.font = `${8*0.3528*k}px ${FONT}`;
+    ctx.fillStyle = '#7b869c'; ctx.textAlign = 'right'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(L.foot(seed, L.cats[realCat], L.levels[level]), (210-M)*k, (297-M)*k);
+    const cellMm = Math.min(areaW / N, 13);
+    const size = cellMm * N;
+    const gx = 105 - size/2, gy = y;
+    if (showSolution) {
+      p.words.forEach((wd, wi) => {
+        ctx.fillStyle = PALETTE[wi % PALETTE.length];
+        wd.cells.forEach(([r, c]) => ctx.fillRect((gx + c*cellMm)*k, (gy + r*cellMm)*k, cellMm*k, cellMm*k));
+      });
+    }
+    ctx.font = `700 ${cellMm*0.6*k}px ${FONT}`;
+    ctx.fillStyle = '#1f2a44'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) ctx.fillText(p.grid[r*N+c], (gx + (c+.5)*cellMm)*k, (gy + (r+.5)*cellMm)*k + cellMm*0.03*k);
+    ctx.strokeStyle = '#c9d3e3'; ctx.lineWidth = 0.25*k;
+    ctx.beginPath();
+    for (let i = 0; i <= N; i++) { ctx.moveTo((gx+i*cellMm)*k, gy*k); ctx.lineTo((gx+i*cellMm)*k, (gy+size)*k); ctx.moveTo(gx*k, (gy+i*cellMm)*k); ctx.lineTo((gx+size)*k, (gy+i*cellMm)*k); }
+    ctx.stroke();
+    ctx.strokeStyle = '#1f2a44'; ctx.lineWidth = 0.9*k;
+    ctx.strokeRect(gx*k, gy*k, size*k, size*k);
+    const listTop = gy + size + 8;
+    const listFont = 12 * 0.3528 * k;
+    ctx.font = `600 ${listFont}px ${FONT}`;
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    const cols = p.total <= 6 ? 2 : (p.total <= 12 ? 3 : 4);
+    const colW = areaW / cols, rowH = 7;
+    const wordsSorted = p.words.map(w => w.word).slice().sort();
+    wordsSorted.forEach((w, i) => {
+      const col = i % cols, row = Math.floor(i / cols);
+      const x = 105 - areaW/2 + col*colW, yy = listTop + row*rowH;
+      const box = 3.4;
+      ctx.strokeStyle = '#1f2a44'; ctx.lineWidth = 0.35*k;
+      ctx.strokeRect(x*k, (yy - box/2)*k, box*k, box*k);
+      if (showSolution) {
+        ctx.strokeStyle = '#2f8f4e'; ctx.lineWidth = 0.7*k;
+        ctx.beginPath(); ctx.moveTo((x+0.5)*k,(yy)*k); ctx.lineTo((x+1.4)*k,(yy+1.1)*k); ctx.lineTo((x+2.9)*k,(yy-1.3)*k); ctx.stroke();
+      }
+      ctx.fillStyle = '#1f2a44';
+      ctx.fillText(w, (x + box + 1.6)*k, yy*k + 0.3*k);
+    });
+  }
+  return { draw, name: { uz: "So'z qidiruv", ru: "Найди слова" }, cats: CAT_KEYS, catLabel: LBL };
+})();
+
+// ================= SONLI KROSSVORD MODULI =================
+const CW = (function () {
+  const LEVELS = [
+    { ops:['+','-'],             span:30, mulMax:10, targetEq:14, hideFrac:0.40 },
+    { ops:['+','-','\u00d7'],           span:40, mulMax:10, targetEq:19, hideFrac:0.52 },
+    { ops:['+','-','\u00d7','\u00f7'],         span:60, mulMax:12, targetEq:24, hideFrac:0.62 },
+    { ops:['+','-','\u00d7','\u00f7'],         span:90, mulMax:12, targetEq:29, hideFrac:0.70 }
+  ];
+  const MAXV = 999;
+  const ok3 = (A, B, C) => [A, B, C].every(v => Number.isInteger(v) && v >= 1 && v <= MAXV);
+  function applyOp(a, op, b) {
+    if (op === '+') return a + b;
+    if (op === '-') return a - b >= 1 ? a - b : null;
+    if (op === '\u00d7') return a * b;
+    return (b !== 0 && a % b === 0) ? a / b : null;
+  }
+  function genFree(op, span, mulMax, rand) {
+    if (op === '+') { const A = randInt(rand,1,span), B = randInt(rand,1,span); return { A, B, C: A+B }; }
+    if (op === '-') { const A = randInt(rand,10,10+span), maxB = Math.min(A-1, span); if (maxB<1) return null; const B = randInt(rand,1,maxB); return { A, B, C: A-B }; }
+    if (op === '\u00d7') { const A = randInt(rand,2,mulMax), B = randInt(rand,2,mulMax); return { A, B, C: A*B }; }
+    const B = randInt(rand,2,mulMax), C = randInt(rand,2,mulMax); return { A: B*C, B, C };
+  }
+  function genGivenA(A, op, span, mulMax, rand) {
+    if (op === '+') { const B = randInt(rand,1,span); return { A, B, C: A+B }; }
+    if (op === '-') { if (A<2) return null; const B = randInt(rand,1,A-1); return { A, B, C: A-B }; }
+    if (op === '\u00d7') { const B = randInt(rand,2,mulMax); return { A, B, C: A*B }; }
+    const divs = []; for (let d=2; d<=mulMax; d++) if (A%d===0 && A/d>=2) divs.push(d);
+    if (!divs.length) return null; const B = divs[Math.floor(rand()*divs.length)]; return { A, B, C: A/B };
+  }
+  function genGivenB(B, op, span, mulMax, rand) {
+    if (op === '+') { const A = randInt(rand,1,span); return { A, B, C: A+B }; }
+    if (op === '-') { const C = randInt(rand,1,span); return { A: B+C, B, C }; }
+    if (op === '\u00d7') { const A = randInt(rand,2,mulMax); return { A, B, C: A*B }; }
+    const C = randInt(rand,2,mulMax); return { A: B*C, B, C };
+  }
+  function genGivenC(C, op, span, mulMax, rand) {
+    if (op === '+') { if (C<2) return null; const A = randInt(rand,1,C-1); return { A, B: C-A, C }; }
+    if (op === '-') { const A = C + randInt(rand,1,span); return { A, B: A-C, C }; }
+    if (op === '\u00d7') {
+      const divs = []; for (let d=2; d<=mulMax; d++) if (C%d===0 && C/d>=2 && C/d<=mulMax) divs.push(d);
+      if (!divs.length) return null; const A = divs[Math.floor(rand()*divs.length)]; return { A, B: C/A, C };
+    }
+    const B = randInt(rand,2,mulMax); return { A: B*C, B, C };
+  }
+  function solveThird(known, op) {
+    if (known.C === undefined) { const c = applyOp(known.A, op, known.B); return c===null ? null : { ...known, C:c }; }
+    if (known.B === undefined) {
+      let b;
+      if (op === '+') b = known.C - known.A;
+      else if (op === '-') b = known.A - known.C;
+      else if (op === '\u00d7') b = (known.A!==0 && known.C%known.A===0) ? known.C/known.A : NaN;
+      else b = (known.C!==0 && known.A%known.C===0) ? known.A/known.C : NaN;
+      return (Number.isInteger(b) && b>=1) ? { ...known, B:b } : null;
+    }
+    let a;
+    if (op === '+') a = known.C - known.B;
+    else if (op === '-') a = known.C + known.B;
+    else if (op === '\u00d7') a = (known.B!==0 && known.C%known.B===0) ? known.C/known.B : NaN;
+    else a = known.B * known.C;
+    return (Number.isInteger(a) && a>=1) ? { ...known, A:a } : null;
+  }
+  function tryPlace(gridType, gridOp, gridVal, op, orient, ar, ac, role, rand, span, mulMax, LIMIT) {
+    let cells;
+    if (orient === 'H') {
+      const startC = role===0 ? ac : role===2 ? ac-2 : ac-4;
+      if (startC<1 || startC+4>=LIMIT-1 || ar<1 || ar>=LIMIT-1) return null;
+      cells = [0,1,2,3,4].map(i => ({ r:ar, c:startC+i }));
+    } else {
+      const startR = role===0 ? ar : role===2 ? ar-2 : ar-4;
+      if (startR<1 || startR+4>=LIMIT-1 || ac<1 || ac>=LIMIT-1) return null;
+      cells = [0,1,2,3,4].map(i => ({ r:startR+i, c:ac }));
+    }
+    const before = orient==='H' ? {r:cells[0].r, c:cells[0].c-1} : {r:cells[0].r-1, c:cells[0].c};
+    const after  = orient==='H' ? {r:cells[4].r, c:cells[4].c+1} : {r:cells[4].r+1, c:cells[4].c};
+    if (gridType[before.r+','+before.c] || gridType[after.r+','+after.c]) return null;
+    const roles = ['A','op','B','eq','C'];
+    const known = {};
+    for (let i=0; i<5; i++) {
+      const k = cells[i].r+','+cells[i].c, rl = roles[i], t = gridType[k];
+      if (rl==='op' || rl==='eq') { if (t) return null; }
+      else if (t==='num') known[rl] = gridVal[k];
+      else if (t) return null;
+    }
+    const kcount = Object.keys(known).length;
+    let vals;
+    if (kcount===0) vals = genFree(op, span, mulMax, rand);
+    else if (kcount===1) {
+      if (known.A!==undefined) vals = genGivenA(known.A, op, span, mulMax, rand);
+      else if (known.B!==undefined) vals = genGivenB(known.B, op, span, mulMax, rand);
+      else vals = genGivenC(known.C, op, span, mulMax, rand);
+    } else if (kcount===2) {
+      vals = solveThird(known, op);
+    } else {
+      vals = (applyOp(known.A, op, known.B) === known.C) ? known : null;
+    }
+    if (!vals || !ok3(vals.A, vals.B, vals.C)) return null;
+    for (let i=0; i<5; i++) {
+      const k = cells[i].r+','+cells[i].c, rl = roles[i];
+      if (rl==='op') { gridType[k]='op'; gridOp[k]=op; }
+      else if (rl==='eq') { gridType[k]='eq'; }
+      else { gridType[k]='num'; gridVal[k]=vals[rl]; }
+    }
+    return { a:cells[0], b:cells[2], c:cells[4], op };
+  }
+  function buildPuzzle(level, seed) {
+    const { ops, span, mulMax, targetEq, hideFrac } = LEVELS[level];
+    const rand = makeRng(seed);
+    const LIMIT = 65, CENTER = 32;
+    const gridType = {}, gridOp = {}, gridVal = {};
+    const equations = [];
+    let first = null;
+    for (let t=0; t<40 && !first; t++) first = tryPlace(gridType, gridOp, gridVal, ops[Math.floor(rand()*ops.length)], 'H', CENTER, CENTER, 0, rand, span, mulMax, LIMIT);
+    if (first) equations.push(first);
+    let attempts = 0;
+    while (equations.length < targetEq && attempts < 2500) {
+      attempts++;
+      const numKeys = Object.keys(gridType).filter(k => gridType[k]==='num');
+      if (!numKeys.length) break;
+      const [ar, ac] = numKeys[Math.floor(rand()*numKeys.length)].split(',').map(Number);
+      const role = [0,2,4][Math.floor(rand()*3)];
+      const orient = rand()<0.5 ? 'H' : 'V';
+      const op = ops[Math.floor(rand()*ops.length)];
+      const res = tryPlace(gridType, gridOp, gridVal, op, orient, ar, ac, role, rand, span, mulMax, LIMIT);
+      if (res) equations.push(res);
+    }
+    let minR=1e9,maxR=-1e9,minC=1e9,maxC=-1e9;
+    Object.keys(gridType).forEach(k => { const [r,c]=k.split(',').map(Number); minR=Math.min(minR,r); maxR=Math.max(maxR,r); minC=Math.min(minC,c); maxC=Math.max(maxC,c); });
+    const numKeysAll = Object.keys(gridType).filter(k => gridType[k]==='num');
+    const known = new Set(numKeysAll);
+    function fullyDeduced(knownSet) {
+      const kn = new Set(knownSet);
+      let progress = true;
+      while (progress) {
+        progress = false;
+        for (const eq of equations) {
+          const ka = eq.a.r+','+eq.a.c, kb = eq.b.r+','+eq.b.c, kc = eq.c.r+','+eq.c.c;
+          const ha=kn.has(ka), hb=kn.has(kb), hc=kn.has(kc), cnt=[ha,hb,hc].filter(Boolean).length;
+          if (cnt===2) { if(!ha){kn.add(ka);progress=true;} else if(!hb){kn.add(kb);progress=true;} else if(!hc){kn.add(kc);progress=true;} }
+        }
+      }
+      return kn.size === numKeysAll.length;
+    }
+    const target = Math.max(1, Math.round(numKeysAll.length * hideFrac));
+    const order = numKeysAll.slice();
+    for (let i=order.length-1; i>0; i--) { const j=Math.floor(rand()*(i+1)); [order[i],order[j]]=[order[j],order[i]]; }
+    let hidden = 0;
+    for (const k of order) {
+      if (hidden >= target) break;
+      known.delete(k);
+      if (fullyDeduced(known)) hidden++; else known.add(k);
+    }
+    return { gridType, gridOp, gridVal, equations, bbox:{minR,maxR,minC,maxC}, given: known, hiddenCount: hidden, totalCells: numKeysAll.length, eqCount: equations.length };
+  }
+  const LBL = {
+    uz: { defTitle: "Bo'sh katakchalarni to'ldir!", levels: ["Oson","O'rta","Qiyin","Juda qiyin"], foot: (n, level) => `Sonli krossvord raqami: ${n} (${level})` },
+    ru: { defTitle: "Заполни пустые клетки!", levels: ["Легко","Средне","Сложно","Очень сложно"], foot: (n, level) => `Числовой кроссворд № ${n} (${level})` }
+  };
+  function draw(canvas, k, seed, level, showSolution, lang) {
+    const L = LBL[lang];
+    const p = buildPuzzle(level, seed);
+    const ctx = canvas.getContext('2d');
+    canvas.width = Math.round(210*k); canvas.height = Math.round(297*k);
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const M = 12, areaW = 210 - 2*M;
+    const fpx = 22 * 0.3528 * k;
+    ctx.font = `700 ${fpx}px ${FONT}`;
+    ctx.fillStyle = '#1f2a44'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    const lines = wrapLines(ctx, L.defTitle, areaW*k);
+    const lh = fpx * 1.25;
+    lines.forEach((ln, i) => ctx.fillText(ln, 105*k, M*k + i*lh));
+    const top = M + (lines.length * lh) / k + (lines.length ? 8 : 0);
+    const footH = 7;
+    ctx.font = `${8*0.3528*k}px ${FONT}`;
+    ctx.fillStyle = '#7b869c'; ctx.textAlign = 'right'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(L.foot(seed, L.levels[level]), (210-M)*k, (297-M)*k);
+    const bb = p.bbox, gw = bb.maxC-bb.minC+1, gh = bb.maxR-bb.minR+1;
+    const areaH = (297 - M - footH) - top;
+    const cellMm = Math.min(areaW/gw, areaH/gh, 17);
+    const gx = 105 - (gw*cellMm)/2, gy = top + Math.max(0, (areaH - gh*cellMm)/2);
+    const cx = c => (gx + (c-bb.minC)*cellMm)*k, cy = r => (gy + (r-bb.minR)*cellMm)*k;
+    ctx.lineWidth = 0.6*k;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    Object.keys(p.gridType).forEach(key => {
+      const [r,c] = key.split(',').map(Number), t = p.gridType[key];
+      const x = cx(c), y = cy(r), w = cellMm*k;
+      ctx.strokeStyle = '#1f2a44';
+      ctx.strokeRect(x, y, w, w);
+      if (t === 'num') {
+        const isGiven = p.given.has(key);
+        ctx.font = `700 ${cellMm*0.5*k}px ${FONT}`;
+        if (isGiven) { ctx.fillStyle = '#1f2a44'; ctx.fillText(String(p.gridVal[key]), x+w/2, y+w/2+cellMm*0.02*k); }
+        else if (showSolution) { ctx.fillStyle = '#e5484d'; ctx.fillText(String(p.gridVal[key]), x+w/2, y+w/2+cellMm*0.02*k); }
+      } else if (t === 'op') {
+        ctx.font = `700 ${cellMm*0.55*k}px ${FONT}`;
+        ctx.fillStyle = '#3d4a68'; ctx.fillText(p.gridOp[key], x+w/2, y+w/2+cellMm*0.02*k);
+      } else if (t === 'eq') {
+        ctx.font = `700 ${cellMm*0.55*k}px ${FONT}`;
+        ctx.fillStyle = '#3d4a68'; ctx.fillText('=', x+w/2, y+w/2+cellMm*0.02*k);
+      }
+    });
+  }
+  return { draw, name: { uz: "Krossvord", ru: "Кроссворд" } };
+})();
+
+// ================= Sahifa tillari =================
+const PAGE_I18N = {
+  uz: { tabMaze:"Labirint", tabSudoku:"Sudoku", tabWords:"So'z qidiruv", tabCross:"Krossvord", tabPack:"To'plam",
+        h1:"Topshiriqlar to'plami", sub:"Har turdan nechtadan kerakligini tanlang, ko'rib chiqing, bitta PDF qilib oling.",
+        mazeName:"Labirint", sudokuName:"Sudoku", wordsName:"So'z qidiruv", crossName:"Sonli krossvord",
+        countLbl:"Soni", typeLbl:"Turi", catLbl:"Mavzu", levels:["Oson","O'rta","Qiyin","Juda qiyin"],
+        mixed:"Aralash", buildBtn:"To'plamni yaratish", pdfTaskBtn:"Topshiriqlar (PDF)", pdfAnsBtn:"Javoblar (PDF)",
+        totalLbl: n => `Jami: ${n} ta topshiriq`, emptyMsg:"Hali hech narsa yo'q. Yuqorida sozlab, \"To'plamni yaratish\" ni bosing.",
+        statusBuild:"Tayyorlanmoqda...", statusPdf: (i,n) => `PDF tayyorlanmoqda: ${i} / ${n}`, statusDone:"Tayyor!",
+        regen:"\u{1F504} Yangi", remove:"\u2715 O'chirish", nothingWarn:"Kamida bitta turdan tanlang."
+  },
+  ru: { tabMaze:"Лабиринт", tabSudoku:"Судоку", tabWords:"Найди слова", tabCross:"Кроссворд", tabPack:"Набор",
+        h1:"Набор заданий", sub:"Выберите, сколько заданий каждого вида нужно, просмотрите и скачайте один PDF.",
+        mazeName:"Лабиринт", sudokuName:"Судоку", wordsName:"Найди слова", crossName:"Числовой кроссворд",
+        countLbl:"Количество", typeLbl:"Тип", catLbl:"Тема", levels:["Легко","Средне","Сложно","Очень сложно"],
+        mixed:"Смешано", buildBtn:"Собрать набор", pdfTaskBtn:"Задания (PDF)", pdfAnsBtn:"Ответы (PDF)",
+        totalLbl: n => `Всего: ${n} заданий`, emptyMsg:"Пока ничего нет. Настройте выше и нажмите «Собрать набор».",
+        statusBuild:"Готовится...", statusPdf: (i,n) => `Готовится PDF: ${i} / ${n}`, statusDone:"Готово!",
+        regen:"\u{1F504} Новое", remove:"\u2715 Удалить", nothingWarn:"Выберите хотя бы один тип."
+  }
+};
+let lang = 'uz';
+const PT = () => PAGE_I18N[lang];
+
+// ================= Boshqaruv =================
+let items = [];        // {id, kind, level, seed, sub}
+let nextId = 1;
+
+function buildLevelPicker(containerId, storeKey, defaultIdx) {
+  const box = $(containerId);
+  let idx = defaultIdx;
+  try { const v = +localStorage.getItem(storeKey); if (v>=0 && v<=3 && localStorage.getItem(storeKey)!==null) idx = v; } catch(e) {}
+  function render() {
+    box.innerHTML = '';
+    PT().levels.forEach((name, i) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'lvl'; b.textContent = name;
+      b.setAttribute('aria-pressed', String(idx === i));
+      b.addEventListener('click', () => { idx = i; try { localStorage.setItem(storeKey, String(i)); } catch(e) {} render(); });
+      box.appendChild(b);
+    });
+  }
+  render();
+  return { get: () => idx, rerender: render };
+}
+const lvlMaze = buildLevelPicker('lvl-maze', 'pk_lvl_maze', 1);
+const lvlSudoku = buildLevelPicker('lvl-sudoku', 'pk_lvl_sudoku', 1);
+const lvlWords = buildLevelPicker('lvl-words', 'pk_lvl_words', 1);
+const lvlCross = buildLevelPicker('lvl-cross', 'pk_lvl_cross', 1);
+
+function fillSelect(sel, opts) {
+  const cur = sel.value;
+  sel.innerHTML = '';
+  opts.forEach(([val, label]) => { const o = document.createElement('option'); o.value = val; o.textContent = label; sel.appendChild(o); });
+  if ([...sel.options].some(o => o.value === cur)) sel.value = cur;
+}
+function refreshSelects() {
+  fillSelect($('type-sudoku'), [['mixed', PT().mixed], ...SD.types.map(t => [t, SD.typeLabel[lang].types[t]])]);
+  fillSelect($('cat-words'), [['mixed', PT().mixed], ...WS.cats.map(c => [c, WS.catLabel[lang].cats[c]])]);
+}
+
+function applyLang(l) {
+  lang = l;
+  document.documentElement.lang = l;
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = PT()[el.dataset.i18n]; });
+  document.querySelectorAll('.lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === l)));
+  document.title = PT().h1;
+  try { localStorage.setItem('lang', l); } catch (e) {}
+  [lvlMaze, lvlSudoku, lvlWords, lvlCross].forEach(p => p.rerender());
+  refreshSelects();
+  renderGrid();
+}
+
+function kindMod(kind) { return { maze: MZ, sudoku: SD, words: WS, cross: CW }[kind]; }
+function kindLabel(kind) { return kindMod(kind).name[lang]; }
+
+function drawItem(canvas, k, it, showSolution) {
+  if (it.kind === 'maze') MZ.draw(canvas, k, it.seed, it.level, showSolution, lang);
+  else if (it.kind === 'sudoku') SD.draw(canvas, k, it.seed, it.level, it.sub.type, showSolution, lang);
+  else if (it.kind === 'words') WS.draw(canvas, k, it.seed, it.level, it.sub.cat, showSolution, lang);
+  else CW.draw(canvas, k, it.seed, it.level, showSolution, lang);
+}
+
+function renderGrid() {
+  const grid = $('grid'), wrap = $('reviewWrap');
+  if (!items.length) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'grid';
+  $('totalLbl').textContent = PT().totalLbl(items.length);
+  grid.innerHTML = '';
+  items.forEach(it => {
+    const card = document.createElement('div');
+    card.className = 'item';
+    const canvas = document.createElement('canvas');
+    card.appendChild(canvas);
+    const lbl = document.createElement('div'); lbl.className = 'lbl';
+    lbl.textContent = `${kindLabel(it.kind)} #${it.n}`;
+    card.appendChild(lbl);
+    const btns = document.createElement('div'); btns.className = 'btns';
+    const regenBtn = document.createElement('button'); regenBtn.textContent = PT().regen;
+    regenBtn.addEventListener('click', () => { it.seed = Math.floor(Math.random()*1e9) + 1; drawItem(canvas, 620/210, it, false); });
+    const rmBtn = document.createElement('button'); rmBtn.textContent = PT().remove;
+    rmBtn.addEventListener('click', () => { items = items.filter(x => x.id !== it.id); renderGrid(); });
+    btns.appendChild(regenBtn); btns.appendChild(rmBtn);
+    card.appendChild(btns);
+    grid.appendChild(card);
+    drawItem(canvas, 620/210, it, false);
+  });
+}
+
+function buildPacket() {
+  const specs = [
+    { kind:'maze',   on:$('on-maze').checked,   cnt:$('cnt-maze'),   level:lvlMaze.get(),   sub:{} },
+    { kind:'sudoku', on:$('on-sudoku').checked, cnt:$('cnt-sudoku'), level:lvlSudoku.get(), sub:{type:$('type-sudoku').value} },
+    { kind:'words',  on:$('on-words').checked,  cnt:$('cnt-words'),  level:lvlWords.get(),  sub:{cat:$('cat-words').value} },
+    { kind:'cross',  on:$('on-cross').checked,  cnt:$('cnt-cross'),  level:lvlCross.get(),  sub:{} }
+  ];
+  if (!specs.some(s => s.on && Math.max(0, +s.cnt.value || 0) > 0)) { alert(PT().nothingWarn); return; }
+  items = [];
+  specs.forEach(s => {
+    if (!s.on) return;
+    const n = Math.max(0, Math.min(20, Math.round(+s.cnt.value) || 0));
+    for (let i = 1; i <= n; i++) items.push({ id: nextId++, kind: s.kind, n: i, level: s.level, sub: s.sub, seed: Math.floor(Math.random()*1e9) + 1 });
+  });
+  renderGrid();
+  $('reviewWrap').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+// ---------- Ko'p betli PDF ----------
+function buildMultiPagePdf(pages) {
+  const enc = new TextEncoder();
+  const parts = []; const offsets = {};
+  let len = 0;
+  const push = d => { const b = typeof d === 'string' ? enc.encode(d) : d; parts.push(b); len += b.length; };
+  const PW = 595.28, PH = 841.89;
+  const N = pages.length;
+  push('%PDF-1.4\n');
+  offsets[1] = len; push('1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n');
+  const kids = Array.from({length:N}, (_, i) => `${3+3*i} 0 R`).join(' ');
+  offsets[2] = len; push(`2 0 obj\n<< /Type /Pages /Kids [${kids}] /Count ${N} >>\nendobj\n`);
+  pages.forEach((p, i) => {
+    const pageNum = 3+3*i, imgNum = 4+3*i, contentNum = 5+3*i;
+    const content = `q ${PW} 0 0 ${PH} 0 0 cm /Im0 Do Q`;
+    offsets[pageNum] = len; push(`${pageNum} 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PW} ${PH}] /Resources << /XObject << /Im0 ${imgNum} 0 R >> >> /Contents ${contentNum} 0 R >>\nendobj\n`);
+    offsets[imgNum] = len; push(`${imgNum} 0 obj\n<< /Type /XObject /Subtype /Image /Width ${p.w} /Height ${p.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${p.buf.length} >>\nstream\n`);
+    push(p.buf); push('\nendstream\nendobj\n');
+    offsets[contentNum] = len; push(`${contentNum} 0 obj\n<< /Length ${content.length} >>\nstream\n${content}\nendstream\nendobj\n`);
+  });
+  const xrefStart = len;
+  const maxObj = 2 + 3*N;
+  let xref = `xref\n0 ${maxObj+1}\n0000000000 65535 f \n`;
+  for (let i = 1; i <= maxObj; i++) xref += String(offsets[i] || 0).padStart(10, '0') + ' 00000 n \n';
+  push(xref + `trailer\n<< /Size ${maxObj+1} /Root 1 0 R >>\nstartxref\n${xrefStart}\n%%EOF`);
+  return new Blob(parts, { type: 'application/pdf' });
+}
+function download(blob, name) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+}
+async function exportPdf(showSolution) {
+  if (!items.length) return;
+  $('pdfTaskBtn').disabled = true; $('pdfAnsBtn').disabled = true;
+  const status = $('status');
+  const canvas = $('work');
+  const k = 300/25.4;
+  const pages = [];
+  for (let i = 0; i < items.length; i++) {
+    status.textContent = PT().statusPdf(i+1, items.length);
+    await new Promise(r => setTimeout(r, 0));   // ekranni yangilash uchun imkon beradi
+    drawItem(canvas, k, items[i], showSolution);
+    const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.9));
+    const buf = new Uint8Array(await blob.arrayBuffer());
+    pages.push({ buf, w: canvas.width, h: canvas.height });
+  }
+  const pdf = buildMultiPagePdf(pages);
+  const stamp = Math.floor(Math.random()*1e6);
+  download(pdf, showSolution ? `toplam-${stamp}-javoblar.pdf` : `toplam-${stamp}.pdf`);
+  status.textContent = PT().statusDone;
+  $('pdfTaskBtn').disabled = false; $('pdfAnsBtn').disabled = false;
+  setTimeout(() => { status.textContent = ''; }, 2500);
+}
+
+document.querySelectorAll('.lang button').forEach(b => b.addEventListener('click', () => applyLang(b.dataset.lang)));
+$('buildBtn').addEventListener('click', buildPacket);
+$('pdfTaskBtn').addEventListener('click', () => exportPdf(false));
+$('pdfAnsBtn').addEventListener('click', () => exportPdf(true));
+
+let savedLang = 'uz';
+try { savedLang = localStorage.getItem('lang') || 'uz'; } catch (e) {}
+applyLang(PAGE_I18N[savedLang] ? savedLang : 'uz');
+
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>
